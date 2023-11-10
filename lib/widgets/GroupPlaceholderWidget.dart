@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:todo_calendar_client/events_calendar.dart';
+import 'package:todo_calendar_client/user_info_map.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/models/requests/AddNewGroupModel.dart';
@@ -97,7 +97,7 @@ class GroupPlaceholderWidget extends StatelessWidget {
             if(index == 0) ...[
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EventsCalendarPage()),);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserInfoMapPage()),);
                 },
                 child: Text('Перейти к вашему календарю'),
               ),
