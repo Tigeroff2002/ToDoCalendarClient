@@ -36,7 +36,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
 
-  static int userId = 0;
+  static int userId = 1;
   static String token = '0895439408';
 
   void initState(){
