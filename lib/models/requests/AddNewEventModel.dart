@@ -7,10 +7,10 @@ class AddNewEventModel extends RequestWithToken {
 
   final String caption;
   final String description;
-  final DateTime start;
+  final String start;
   final String duration;
-  final EventType eventType;
-  final EventStatus eventStatus;
+  final String eventType;
+  final String eventStatus;
   final int groupId;
   final List<int> guestIds;
 
@@ -42,8 +42,4 @@ class AddNewEventModel extends RequestWithToken {
       'guests_ids': guestIds
     };
   }
-
-    String serialize() {
-      return jsonEncode(toJson());
-    }
 }

@@ -19,8 +19,4 @@ class GroupInfoRequest extends RequestWithToken{
       'group_id': groupId
     };
   }
-
-  String serialize() {
-    return jsonEncode(toJson());
-  }
 }

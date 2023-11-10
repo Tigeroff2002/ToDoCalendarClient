@@ -15,8 +15,4 @@ class UserInfoRequestModel extends RequestWithToken{
       'token': token
     };
   }
-
-  String serialize() {
-    return jsonEncode(toJson());
-  }
 }

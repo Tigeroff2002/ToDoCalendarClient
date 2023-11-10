@@ -12,8 +12,4 @@ class RequestWithToken {
             'token': token
         };
     }
-
-    String serialize(){
-        return jsonEncode(toJson());
-    }
 }

@@ -10,7 +10,7 @@ class EditExistingGroupModel extends AddNewGroupModel {
     required int userId,
     required String token,
     required String groupName,
-    required GroupType groupType,
+    required String groupType,
     List<int> participants = const [],
     required this.groupId
   })
@@ -29,9 +29,5 @@ class EditExistingGroupModel extends AddNewGroupModel {
       'group_type': groupType,
       'participants': participants
     };
-  }
-
-  String serialize() {
-    return jsonEncode(toJson());
   }
 }

@@ -19,8 +19,4 @@ class EventInfoRequest extends RequestWithToken{
       'event_id': eventId
     };
   }
-
-  String serialize() {
-    return jsonEncode(toJson());
-  }
 }

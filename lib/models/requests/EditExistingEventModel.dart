@@ -8,10 +8,10 @@ class EditExistingEventModel extends RequestWithToken {
   final int eventId;
   final String caption;
   final String description;
-  final DateTime start;
+  final String start;
   final String duration;
-  final EventType eventType;
-  final EventStatus eventStatus;
+  final String eventType;
+  final String eventStatus;
   final List<int> guestIds;
 
   EditExistingEventModel({
@@ -41,9 +41,5 @@ class EditExistingEventModel extends RequestWithToken {
       'event_status': eventStatus,
       'guests_ids': guestIds
     };
-  }
-
-  String serialize() {
-    return jsonEncode(toJson());
   }
 }

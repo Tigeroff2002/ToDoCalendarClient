@@ -5,7 +5,7 @@ import 'RequestWithToken.dart';
 class AddNewGroupModel extends RequestWithToken {
 
   final String groupName;
-  final GroupType groupType;
+  final String groupType;
   final List<int> participants;
 
   AddNewGroupModel({
@@ -25,9 +25,5 @@ class AddNewGroupModel extends RequestWithToken {
       'group_type': groupType,
       'participants': participants
     };
-  }
-
-  String serialize() {
-    return jsonEncode(toJson());
   }
 }

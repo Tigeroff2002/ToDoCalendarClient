@@ -4,9 +4,9 @@ import 'RequestWithToken.dart';
 
 class AddNewReportModel extends RequestWithToken {
 
-  final ReportType reportType;
-  final DateTime beginMoment;
-  final DateTime endMoment;
+  final String reportType;
+  final String beginMoment;
+  final String endMoment;
 
   AddNewReportModel({
     required int userId,
@@ -25,9 +25,5 @@ class AddNewReportModel extends RequestWithToken {
       'begin_moment': beginMoment,
       'end_moment': endMoment
     };
-  }
-
-  String serialize() {
-    return jsonEncode(toJson());
   }
 }

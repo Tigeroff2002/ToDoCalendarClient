@@ -13,8 +13,8 @@ class EditExistingTaskModel extends AddNewTaskModel {
     required String token,
     required String caption,
     required String description,
-    required TaskType taskType,
-    required TaskCurrentStatus taskStatus,
+    required String taskType,
+    required String taskStatus,
     required int implementerId,
     required this.taskId
   })

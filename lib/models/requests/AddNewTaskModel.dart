@@ -7,8 +7,8 @@ class AddNewTaskModel extends RequestWithToken {
 
   final String caption;
   final String description;
-  final TaskType taskType;
-  final TaskCurrentStatus taskStatus;
+  final String taskType;
+  final String taskStatus;
   final int implementerId;
 
   AddNewTaskModel({
@@ -32,9 +32,5 @@ class AddNewTaskModel extends RequestWithToken {
       'task_status': taskStatus,
       'implementer_id': implementerId
     };
-  }
-
-  String serialize() {
-    return jsonEncode(toJson());
   }
 }

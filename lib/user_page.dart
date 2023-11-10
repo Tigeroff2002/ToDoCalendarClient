@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/events_calendar.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/home_page.dart';
+import 'package:todo_calendar_client/models/requests/AddNewEventModel.dart';
+import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
 
 class UserPage extends StatelessWidget {
   @override
@@ -42,7 +44,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Поиск вакансий'),
+        title: Text('Личный кабинет календаря пользователя'),
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -81,39 +83,59 @@ class PlaceholderWidget extends StatelessWidget {
   final int index;
   List<String> myList = [];
 
-  final TextEditingController announcementNameController = TextEditingController();
-  final TextEditingController announcementDescriptionController = TextEditingController();
-  final TextEditingController announcementConditions_and_requirementsController = TextEditingController();
+  final int userId = 1;
+  final int groupId = 10;
+  final String token = '0895439408';
+
+  final TextEditingController eventCaptionController = TextEditingController();
+  final TextEditingController eventDescriptionController = TextEditingController();
+  final TextEditingController scheduledStartController = TextEditingController();
+  final TextEditingController durationController = TextEditingController();
+  final TextEditingController eventTypeController = TextEditingController();
+  final TextEditingController eventStatusController = TextEditingController();
 
   PlaceholderWidget({required this.color, required this.text,required this.index});
 
   Future<void> add(BuildContext context) async
   {
-    String name = announcementNameController.text;
-    String description = announcementDescriptionController.text;
-    String conditions_and_requirements= announcementConditions_and_requirementsController.text;
+    String caption = eventCaptionController.text;
+    String description = eventDescriptionController.text;
+    String scheduledStart = scheduledStartController.text;
+    String duration = durationController.text;
+    String eventType = eventTypeController.text;
+    String eventStatus = eventStatusController.text;
 
-    final url = Uri.parse('http://172.20.10.3:8092/api_announcements/addAnnouncements');
+    var guestIds = [2];
+
+    var model = new AddNewEventModel(
+        userId: (userId),
+        token: token,
+        caption: caption,
+        description: description,
+        start: scheduledStart,
+        duration: duration,
+        eventType: eventType,
+        eventStatus: eventStatus,
+        groupId: groupId,
+        guestIds: guestIds);
+
+    var requestMap = model.toJson();
+
+    final url = Uri.parse('http://localhost:5201/events/schedule_new');
     final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'name': name,
-      'description': description,
-      'conditions_and_requirements': conditions_and_requirements,
-    });
+    final body = jsonEncode(requestMap);
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 200)
-    {
+    var jsonData = jsonDecode(response.body);
+    var responseContent = Response.fromJson(jsonData);
+
+    if (responseContent.outInfo != null){
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.body),
-        ),
+          SnackBar(
+              content: Text(responseContent.outInfo.toString())
+          )
       );
     }
-
-    announcementNameController.clear();
-    announcementDescriptionController.clear();
-    announcementConditions_and_requirementsController.clear();
   }
 
   @override
@@ -145,23 +167,38 @@ class PlaceholderWidget extends StatelessWidget {
             if(index == 1) ...[
               SizedBox(height: 8.0),
               TextField(
-                controller: announcementNameController,
+                controller: eventCaptionController,
                 decoration: InputDecoration(
                   labelText: 'Наименование мероприятия:',
                 ),
               ),
+              SizedBox(height: 8.0),
               TextFormField(
-                controller: announcementDescriptionController,
+                controller: eventDescriptionController,
                 maxLines: null,
                 decoration: InputDecoration(
                   labelText: 'Описание меропрития:',
                 ),
               ),
-              TextFormField(
-                controller: announcementConditions_and_requirementsController,
-                maxLines: null,
+              SizedBox(height: 8.0),
+              TextField(
+                controller: scheduledStartController,
                 decoration: InputDecoration(
-                  labelText: 'Условия и требования:',
+                  labelText: 'Время начала мероприятия',
+                ),
+              ),
+              SizedBox(height: 8.0),
+              TextField(
+                controller: eventTypeController,
+                decoration: InputDecoration(
+                  labelText: 'Тип мероприятия',
+                ),
+              ),
+              SizedBox(height: 8.0),
+              TextField(
+                controller: eventStatusController,
+                decoration: InputDecoration(
+                  labelText: 'Статус мероприятия',
                 ),
               ),
             ],
@@ -171,7 +208,7 @@ class PlaceholderWidget extends StatelessWidget {
                 onPressed: () {
                   add(context);
                 },
-                child: Text('Создать мероприятие'),
+                child: Text('Создать новое мероприятие'),
               ),
             ],
           ]

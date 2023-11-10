@@ -18,7 +18,7 @@ class EventsCalendarPageState extends State<EventsCalendarPage> {
 
   List<EventInfoResponse> dataList = [];
 
-  Future<void> addAnnouncement() async {
+  Future<void> getEvents() async {
     final response = await http.get(Uri.parse('http://172.20.10.3:8092/api_announcements/announcements_status_ok'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
@@ -31,7 +31,7 @@ class EventsCalendarPageState extends State<EventsCalendarPage> {
   @override
   void initState() {
     super.initState();
-    addAnnouncement();
+    getEvents();
   }
 
   @override

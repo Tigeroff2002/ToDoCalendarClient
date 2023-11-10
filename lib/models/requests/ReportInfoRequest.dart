@@ -19,8 +19,4 @@ class ReportInfoRequest extends RequestWithToken{
       'report_id': reportId
     };
   }
-
-  String serialize() {
-    return jsonEncode(toJson());
-  }
 }

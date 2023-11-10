@@ -19,8 +19,4 @@ class TaskInfoRequest extends RequestWithToken{
       'task_id': taskId
     };
   }
-
-  String serialize() {
-    return jsonEncode(toJson());
-  }
 }
