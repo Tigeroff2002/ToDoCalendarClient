@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:todo_calendar_client/api_requests.dart';
+import 'package:todo_calendar_client/models/requests/UserLoginModel.dart';
+import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
 import 'package:todo_calendar_client/user_page.dart';
 import 'dart:convert';
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Вход в существующую учетную запись'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -20,9 +21,9 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: usernameController,
+              controller: emailController,
               decoration: InputDecoration(
-                labelText: 'Username',
+                labelText: 'Электронная почта: ',
               ),
             ),
             SizedBox(height: 16.0),
@@ -30,7 +31,7 @@ class LoginPage extends StatelessWidget {
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
-                labelText: 'Password',
+                labelText: 'Пароль: ',
               ),
             ),
             SizedBox(height: 16.0),
@@ -38,7 +39,7 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 login(context);
               },
-              child: Text('Login'),
+              child: Text('Войти'),
             ),
           ],
         ),
@@ -47,22 +48,30 @@ class LoginPage extends StatelessWidget {
   }
 
   Future<void> login(BuildContext context) async {
-    String name = usernameController.text;
+    String email = emailController.text;
     String password = passwordController.text;
 
-    final url = Uri.parse('http://172.20.10.3:8092/api_users/login');
+    var model = new UserLoginModel(email: email, password: password);
+
+    var requestMap = model.toJson();
+
+    final url = Uri.parse('http://localhost:5201/users/login');
     final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'name': name,
-      'password': password,
-    });
+    final body = jsonEncode(requestMap);
 
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 200) {
+    var jsonData = jsonDecode(response.body);
+    var responseContent = ResponseWithToken.fromJson(jsonData);
+
+    var userId = responseContent.userId;
+    var token = responseContent.token.toString();
+
+    if (responseContent.result) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => UserPage()),
+        MaterialPageRoute(builder: (context)
+          => UserPage(userId: userId, token: token)),
       );
     } else {
       showDialog(
@@ -81,5 +90,8 @@ class LoginPage extends StatelessWidget {
         ),
       );
     }
+
+    emailController.clear();
+    passwordController.clear();
   }
 }

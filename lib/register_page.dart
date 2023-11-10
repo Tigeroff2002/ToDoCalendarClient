@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_calendar_client/models/requests/UserRegisterModel.dart';
+import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
 import 'dart:convert';
-import 'package:todo_calendar_client/home_page.dart';
+import 'package:todo_calendar_client/user_page.dart';
 
 class RegisterPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController numberPhoneController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Регистрация'),
+        title: Text('Регистрация нового пользователя'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -23,28 +25,28 @@ class RegisterPage extends StatelessWidget {
             TextField(
               controller: emailController,
               decoration: InputDecoration(
-                labelText: 'Email',
+                labelText: 'Электронная почта: ',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
               controller: usernameController,
               decoration: InputDecoration(
-                labelText: 'Имя',
+                labelText: 'Имя пользователя: ',
               ),
             ),
             TextField(
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
-                labelText: 'Пароль',
+                labelText: 'Пароль: ',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
-              controller: numberPhoneController,
+              controller: phoneNumberController,
               decoration: InputDecoration(
-                labelText: 'Номер телефона',
+                labelText: 'Номер телефона: ',
               ),
             ),
             ElevatedButton(
@@ -63,27 +65,40 @@ class RegisterPage extends StatelessWidget {
     String name = usernameController.text;
     String password = passwordController.text;
     String email = emailController.text;
-    String numberPhone = numberPhoneController.text;
+    String phoneNumber = phoneNumberController.text;
 
-    final url = Uri.parse('http://172.20.10.3:8092/api_users/register');
+    var model = new UserRegisterModel(
+        email: email,
+        name: name,
+        password: password,
+        phoneNumber: phoneNumber);
+
+    var requestMap = model.toJson();
+
+    final url = Uri.parse('http://localhost:5201/users/register');
     final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'name': name,
-      'numberPhone': numberPhone,
-      'email': email,
-      'password': password
-    });
+    final body = jsonEncode(requestMap);
 
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 200)
+    var jsonData = jsonDecode(response.body);
+    var responseContent = ResponseWithToken.fromJson(jsonData);
+
+    var userId = responseContent.userId;
+    var token = responseContent.token.toString();
+
+    if (responseContent.result)
     {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(response.body),
+          content: Text(responseContent.outInfo.toString()),
         ),
       );
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context)
+                => UserPage(userId: userId, token: token)));
     }
     else
     {
@@ -103,5 +118,10 @@ class RegisterPage extends StatelessWidget {
         ),
       );
     }
+
+    usernameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    phoneNumberController.clear();
   }
 }

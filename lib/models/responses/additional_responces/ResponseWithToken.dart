@@ -4,11 +4,13 @@ import 'package:todo_calendar_client/models/responses/additional_responces/Respo
 
 class ResponseWithToken extends Response{
 
+  final int userId;
   final String? token;
 
   ResponseWithToken({
     required bool result,
     String? outInfo,
+    required this.userId,
     this.token
   }) :super(result: result, outInfo: outInfo);
 
@@ -16,6 +18,7 @@ class ResponseWithToken extends Response{
     return ResponseWithToken(
         result: json['result'],
         outInfo: json['out_info'],
+        userId: json['user_id'],
         token: json['token']
     );
   }

@@ -10,16 +10,21 @@ class GroupPlaceholderWidget extends StatelessWidget {
   final Color color;
   final String text;
   final int index;
-  List<String> myList = [];
 
-  final int userId = 1;
-  final int groupId = 10;
-  final String token = '0895439408';
+  final int userId;
+  final String token;
 
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController groupTypeController = TextEditingController();
 
-  GroupPlaceholderWidget({required this.color, required this.text,required this.index});
+  GroupPlaceholderWidget(
+      {
+        required this.color,
+        required this.text,
+        required this.index,
+        required this.userId,
+        required this.token
+      });
 
   Future<void> addNewGroup(BuildContext context) async
   {
@@ -46,11 +51,30 @@ class GroupPlaceholderWidget extends StatelessWidget {
     var jsonData = jsonDecode(response.body);
     var responseContent = Response.fromJson(jsonData);
 
-    if (responseContent.outInfo != null){
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(responseContent.outInfo.toString())
-          )
+    if (responseContent.result){
+      if (responseContent.outInfo != null){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(responseContent.outInfo.toString())
+            )
+        );
+      }
+    }
+    else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Ошибка!'),
+          content: Text('Создание новой группы не произошло!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
       );
     }
 
