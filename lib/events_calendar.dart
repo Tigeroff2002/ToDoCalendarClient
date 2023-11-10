@@ -12,7 +12,7 @@ class EventsCalendarPage extends StatefulWidget {
 
 class EventsCalendarPageState extends State<EventsCalendarPage> {
 
-  final url = Uri.parse('http://172.20.10.3:8092/api_announcements/announcements_status_ok');
+  final url = Uri.parse('http://localhost:5201/events/schedule_new');
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
 
