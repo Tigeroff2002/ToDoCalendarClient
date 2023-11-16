@@ -37,8 +37,17 @@ class LoginPage extends StatelessWidget {
                 labelText: 'Пароль: ',
               ),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 25.0),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor : Colors.white,
+                shadowColor: Colors.greenAccent,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(36.0)),
+                minimumSize: Size(150, 60),
+              ),
               onPressed: () {
                 login(context);
               },
@@ -79,7 +88,7 @@ class LoginPage extends StatelessWidget {
         MaterialPageRoute(builder: (context)
           => UserPage()),
       );
-    }else {
+    } else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

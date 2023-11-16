@@ -14,6 +14,15 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor : Colors.white,
+                shadowColor: Colors.greenAccent,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0)),
+                minimumSize: Size(200, 80),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -22,8 +31,17 @@ class HomePage extends StatelessWidget {
               },
               child: Text('Авторизация'),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 40),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor : Colors.white,
+                shadowColor: Colors.greenAccent,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0)),
+                minimumSize: Size(200, 80),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,

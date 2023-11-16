@@ -46,7 +46,7 @@ class RegisterPage extends StatelessWidget {
                 labelText: 'Пароль: ',
               ),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 30.0),
             TextField(
               controller: phoneNumberController,
               decoration: InputDecoration(
@@ -54,6 +54,15 @@ class RegisterPage extends StatelessWidget {
               ),
             ),
             ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.greenAccent,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(36.0)),
+                  minimumSize: Size(150, 60),
+                ),
               onPressed: () {
                 register(context);
               },

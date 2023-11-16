@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
+import 'package:todo_calendar_client/models/enums/DecisionType.dart';
+import 'package:todo_calendar_client/models/enums/EventType.dart';
 import 'package:todo_calendar_client/models/enums/GroupType.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
+import 'package:todo_calendar_client/models/responses/EventInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/GroupInfoResponse.dart';
+import 'package:todo_calendar_client/models/responses/ReportInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart';
+import 'package:todo_calendar_client/models/responses/TaskInfoResponse.dart';
+import 'package:todo_calendar_client/models/responses/UserInfoWithDecisionResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
@@ -13,13 +19,13 @@ import 'package:todo_calendar_client/user_page.dart';
 import 'models/enums/EventStatus.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
-class GroupsListPageWidget extends StatefulWidget {
+class EventsListPageWidget extends StatefulWidget {
 
   @override
-  GroupsListPageState createState() => GroupsListPageState();
+  EventsListPageState createState() => EventsListPageState();
 }
 
-class GroupsListPageState extends State<GroupsListPageWidget> {
+class EventsListPageState extends State<EventsListPageWidget> {
 
   @override
   void initState() {
@@ -33,7 +39,7 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
 
   final EnumAliaser aliaser = new EnumAliaser();
 
-  List<GroupInfoResponse> groupsList = [];
+  List<EventInfoResponse> eventsList = [];
 
   Future<void> getUserInfo() async {
 
@@ -63,7 +69,14 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
         var userRequestedInfo = responseContent.requestedInfo.toString();
 
         var data = jsonDecode(userRequestedInfo);
-        var userGroups = data['user_groups'];
+        var userEvents = data['user_events'];
+
+        var caption = "New december olimpiad discussion";
+        var description = "Discussion about ICPC decemper tour olimpiad";
+        var start = new DateTime(2023, 11, 17, 12, 0, 0);
+        var duration = "00:30:00";
+        var eventType = EventType.OneToOne;
+        var eventStatus = EventStatus.NotStarted;
 
         var manager = new ShortUserInfoResponse(
             userName: "userName",
@@ -77,17 +90,36 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
             groupType: GroupType.Educational,
             participants: participants);
 
-        List<GroupInfoResponse> groups = [group, group];
+        var userWithDecision = new UserInfoWithDecisionResponse(
+            userName: "userName",
+            userEmail: "userEmail",
+            phoneNumber: "phoneNumber",
+            decisionType: DecisionType.Apply);
+
+        List<UserInfoWithDecisionResponse> guests = [userWithDecision];
+
+        var event = new EventInfoResponse(
+            caption: caption,
+            description: description,
+            start: start,
+            duration: duration,
+            eventType: eventType,
+            eventStatus: eventStatus,
+            manager: manager,
+            group: group,
+            guests: guests);
+
+        List<EventInfoResponse> events = [event, event];
 
         /*
-        var fetchedGroups =
-          List<GroupInfoResponse>
-            .from(userGroups.map(
-                (data) => GroupInfoResponse.fromJson(data)));
+        var fetchedEvents =
+          List<EventInfoResponse>
+              .from(userEvents.map(
+                  (data) => EventInfoResponse.fromJson(data)));
         */
 
         setState(() {
-          groupsList = groups;
+          eventsList = events;
         });
       }
     }
@@ -116,11 +148,11 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Список групп'),
+          title: Text('Список мероприятий'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -132,9 +164,9 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
           ),
         ),
         body: ListView.builder(
-          itemCount: groupsList.length,
+          itemCount: eventsList.length,
           itemBuilder: (context, index) {
-            final data = groupsList[index];
+            final data = eventsList[index];
             return Card(
               color: isColor ? Colors.red : Colors.teal,
               elevation: 15,
@@ -150,16 +182,56 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Название группы: ',
+                        'Название мероприятия: ',
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       Text(
-                        utf8.decode(data.groupName.codeUnits),
+                        utf8.decode(data.caption.codeUnits),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Описание мероприятия: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        utf8.decode(data.description.codeUnits),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Время начала мероприятия: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        data.start.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Продолжительность мероприятия: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        data.duration.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -170,14 +242,40 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(data.groupType),
+                        aliaser.GetAlias(data.eventType),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Статус события: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        aliaser.GetAlias(data.eventStatus),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Название группы: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        data.group.groupName,
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       SizedBox(height: 8),
                       ElevatedButton(
-                        child: Text('Выйти из группы'),
+                        child: Text('Перейти к мероприятию'),
                         onPressed: () {},
                       ),
                     ],

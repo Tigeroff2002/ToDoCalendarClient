@@ -121,20 +121,40 @@ class EventPlaceholderWidget extends StatelessWidget {
               text,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 30.0),
             if(index == 0) ...[
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.greenAccent,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(36.0)),
+                  minimumSize: Size(150, 60),
+                ),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => UserInfoMapPage()),);
                 },
-                child: Text('Перейти к вашему календарю'),
+                child: Text('Перейти к вашему личному кабинету'),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 30.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.greenAccent,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(36.0)),
+                  minimumSize: Size(150, 60),
+                ),
                 onPressed: () {
+                  MySharedPreferences mySharedPreferences = new MySharedPreferences();
+                  mySharedPreferences.clearData();
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()),);
                 },
                 child: Text('Выйти'),
