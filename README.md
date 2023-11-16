@@ -6,4 +6,5 @@
 
 My calendar app logo:
 
-![calendar_logo](https://github.com/Tigeroff2002/ToDoCalendar/assets/99354644/25ef1827-429b-4793-ac77-ae0c5bcc8c74)
+
+![logo](https://github.com/Tigeroff2002/ToDoCalendarClient/assets/99354644/12673ddc-644c-4f38-b128-4f1d036d2181)
