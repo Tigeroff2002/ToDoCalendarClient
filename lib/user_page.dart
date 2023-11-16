@@ -6,80 +6,57 @@ import 'package:todo_calendar_client/widgets/ReportPlaceholderWidget.dart';
 
 class UserPage extends StatelessWidget {
 
-  final int userId;
-  final String token;
-
-  UserPage({this.userId = 1, this.token = '0895439408'});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      home: Home(userId: userId, token: token,),
+      home: Home(),
     );
   }
 }
 
 class Home extends StatefulWidget {
 
-  final int userId;
-  final String token;
-
-  Home({required this.userId, required this.token});
-
   @override
-  _HomeState createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
 
-  static int userId = 1;
-  static String token = '0895439408';
-
+  @override
   void initState(){
-    userId = widget.userId;
-    token = widget.token;
+    super.initState();
   }
 
   final List<Widget> _children = [
     EventPlaceholderWidget(
         color: Colors.red,
         text: 'Главная страница пользователя',
-        index: 0,
-        userId: userId,
-        token: token,
+        index: 0
     ),
 
     EventPlaceholderWidget(
         color: Colors.green,
         text: 'Страница создания мероприятия',
-        index: 1,
-        userId: userId,
-        token: token),
+        index: 1),
 
     GroupPlaceholderWidget(
         color: Colors.blueAccent,
         text: 'Страница создания новой группы',
-        index: 2,
-        userId: userId,
-        token: token),
+        index: 2),
 
     TaskPlaceholderWidget(
         color: Colors.lime,
         text: 'Страница создания новой задачи',
-        index: 3,
-        userId: userId,
-        token: token),
+        index: 3),
 
     ReportPlaceholderWidget(
         color: Colors.deepOrangeAccent,
         text: 'Страница создания нового отчета',
-        index: 4,
-        userId: userId,
-        token: token)
+        index: 4)
   ];
 
   void onTabTapped(int index) {
@@ -96,6 +73,10 @@ class _HomeState extends State<Home> {
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.lightBlue,
+        selectedItemColor: Colors.greenAccent,
+        unselectedItemColor: Colors.grey,
         currentIndex: _currentIndex,
         onTap: onTabTapped,
         items: [

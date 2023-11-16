@@ -4,8 +4,10 @@ import 'package:todo_calendar_client/models/requests/UserRegisterModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/user_page.dart';
+import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 
 class RegisterPage extends StatelessWidget {
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -87,6 +89,10 @@ class RegisterPage extends StatelessWidget {
     var userId = responseContent.userId;
     var token = responseContent.token.toString();
 
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+    await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+
     if (responseContent.result)
     {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +104,7 @@ class RegisterPage extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context)
-                => UserPage(userId: userId, token: token)));
+                => UserPage()));
     }
     else
     {

@@ -6,13 +6,13 @@ import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/models/requests/AddNewGroupModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
 
+import '../models/responses/additional_responces/ResponseWithToken.dart';
+import '../shared_pref_cached_data.dart';
+
 class GroupPlaceholderWidget extends StatelessWidget {
   final Color color;
   final String text;
   final int index;
-
-  final int userId;
-  final String token;
 
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController groupTypeController = TextEditingController();
@@ -21,9 +21,7 @@ class GroupPlaceholderWidget extends StatelessWidget {
       {
         required this.color,
         required this.text,
-        required this.index,
-        required this.userId,
-        required this.token
+        required this.index
       });
 
   Future<void> addNewGroup(BuildContext context) async
@@ -33,31 +31,43 @@ class GroupPlaceholderWidget extends StatelessWidget {
 
     var participants = [2, 3];
 
-    var model = new AddNewGroupModel(
-        userId: (userId),
-        token: token,
-        groupName: name,
-        groupType: groupType,
-        participants: participants
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+    var cachedData = await mySharedPreferences.getDataIfNotExpired();
+
+    if (cachedData != null) {
+      var json = jsonDecode(cachedData.toString());
+      var cacheContent = ResponseWithToken.fromJson(json);
+
+      var userId = cacheContent.userId;
+      var token = cacheContent.token.toString();
+
+      var model = new AddNewGroupModel(
+          userId: (userId),
+          token: token,
+          groupName: name,
+          groupType: groupType,
+          participants: participants
       );
 
-    var requestMap = model.toJson();
+      var requestMap = model.toJson();
 
-    final url = Uri.parse('http://localhost:5201/groups/create');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode(requestMap);
-    final response = await http.post(url, headers: headers, body: body);
+      final url = Uri.parse('http://localhost:5201/groups/create');
+      final headers = {'Content-Type': 'application/json'};
+      final body = jsonEncode(requestMap);
+      final response = await http.post(url, headers: headers, body: body);
 
-    var jsonData = jsonDecode(response.body);
-    var responseContent = Response.fromJson(jsonData);
+      var jsonData = jsonDecode(response.body);
+      var responseContent = Response.fromJson(jsonData);
 
-    if (responseContent.result){
-      if (responseContent.outInfo != null){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(responseContent.outInfo.toString())
-            )
-        );
+      if (responseContent.result) {
+        if (responseContent.outInfo != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(responseContent.outInfo.toString())
+              )
+          );
+        }
       }
     }
     else {
@@ -97,7 +107,10 @@ class GroupPlaceholderWidget extends StatelessWidget {
             if(index == 0) ...[
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserInfoMapPage()),);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserInfoMapPage()),);
                 },
                 child: Text('Перейти к вашему календарю'),
               ),

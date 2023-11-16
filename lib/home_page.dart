@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_calendar_client/login_page.dart';
 import 'package:todo_calendar_client/register_page.dart';
-import 'package:todo_calendar_client/api_requests.dart';
 
 class HomePage extends StatelessWidget {
   @override

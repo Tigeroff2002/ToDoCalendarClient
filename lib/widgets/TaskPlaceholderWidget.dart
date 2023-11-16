@@ -6,13 +6,13 @@ import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/models/requests/AddNewTaskModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
 
+import '../models/responses/additional_responces/ResponseWithToken.dart';
+import '../shared_pref_cached_data.dart';
+
 class TaskPlaceholderWidget extends StatelessWidget {
   final Color color;
   final String text;
   final int index;
-
-  final int userId;
-  final String token;
 
   final TextEditingController taskCaptionController = TextEditingController();
   final TextEditingController taskDescriptionController = TextEditingController();
@@ -23,9 +23,7 @@ class TaskPlaceholderWidget extends StatelessWidget {
       {
         required this.color,
         required this.text,
-        required this.index,
-        required this.userId,
-        required this.token
+        required this.index
       });
 
   Future<void> addNewTask(BuildContext context) async
@@ -37,33 +35,45 @@ class TaskPlaceholderWidget extends StatelessWidget {
 
     var implementerId = 3;
 
-    var model = new AddNewTaskModel(
-        userId: (userId),
-        token: token,
-        caption: caption,
-        description: description,
-        taskType: taskType,
-        taskStatus: taskStatus,
-        implementerId: implementerId
-    );
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-    var requestMap = model.toJson();
+    var cachedData = await mySharedPreferences.getDataIfNotExpired();
 
-    final url = Uri.parse('http://localhost:5201/tasks/create');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode(requestMap);
-    final response = await http.post(url, headers: headers, body: body);
+    if (cachedData != null) {
+      var json = jsonDecode(cachedData.toString());
+      var cacheContent = ResponseWithToken.fromJson(json);
 
-    var jsonData = jsonDecode(response.body);
-    var responseContent = Response.fromJson(jsonData);
+      var userId = cacheContent.userId;
+      var token = cacheContent.token.toString();
 
-    if (responseContent.result){
-      if (responseContent.outInfo != null){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(responseContent.outInfo.toString())
-            )
-        );
+      var model = new AddNewTaskModel(
+          userId: (userId),
+          token: token,
+          caption: caption,
+          description: description,
+          taskType: taskType,
+          taskStatus: taskStatus,
+          implementerId: implementerId
+      );
+
+      var requestMap = model.toJson();
+
+      final url = Uri.parse('http://localhost:5201/tasks/create');
+      final headers = {'Content-Type': 'application/json'};
+      final body = jsonEncode(requestMap);
+      final response = await http.post(url, headers: headers, body: body);
+
+      var jsonData = jsonDecode(response.body);
+      var responseContent = Response.fromJson(jsonData);
+
+      if (responseContent.result) {
+        if (responseContent.outInfo != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(responseContent.outInfo.toString())
+              )
+          );
+        }
       }
     }
     else {
@@ -105,7 +115,10 @@ class TaskPlaceholderWidget extends StatelessWidget {
             if(index == 0) ...[
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserInfoMapPage()),);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserInfoMapPage()),);
                 },
                 child: Text('Перейти к вашему календарю'),
               ),

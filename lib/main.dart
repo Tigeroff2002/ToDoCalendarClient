@@ -25,9 +25,6 @@ class MyApp extends StatelessWidget {
         '/register': (context) => RegisterPage(),
         '/user_page': (context) => UserPage(),
         '/events_page': (context) => UserInfoMapPage()
-   //     '/groups_page': (context) => EventsCalendarPage(),
-   //     '/tasks_page': (context) => EventsCalendarPage(),
-   //     '/reports_page': (context) => EventsCalendarPage()
       },
     );
   }

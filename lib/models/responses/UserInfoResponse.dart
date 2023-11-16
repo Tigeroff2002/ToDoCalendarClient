@@ -11,10 +11,10 @@ class UserInfoResponse {
   final String userEmail;
   final String password;
   final String phoneNumber;
-  final List<GroupInfoResponse> userGroups;
-  final List<EventInfoResponse> userEvents;
-  final List<TaskInfoResponse> userTasks;
-  final List<ReportInfoResponse> userReports;
+  final List<dynamic> userGroups;
+  final List<dynamic> userEvents;
+  final List<dynamic> userTasks;
+  final List<dynamic> userReports;
 
   UserInfoResponse({
     required this.userName,

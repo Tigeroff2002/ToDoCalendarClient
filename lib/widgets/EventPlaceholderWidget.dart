@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_info_map.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/models/requests/AddNewEventModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
 
+import '../models/responses/additional_responces/ResponseWithToken.dart';
+
 class EventPlaceholderWidget extends StatelessWidget {
   final Color color;
   final String text;
   final int index;
 
-  final int userId;
   final int groupId = 10;
-  final String token;
+  late String token;
 
   final TextEditingController eventCaptionController = TextEditingController();
   final TextEditingController eventDescriptionController = TextEditingController();
@@ -26,9 +28,7 @@ class EventPlaceholderWidget extends StatelessWidget {
       {
         required this.color,
         required this.text,
-        required this.index,
-        required this.userId,
-        required this.token
+        required this.index
       });
 
   Future<void> addNewEvent(BuildContext context) async
@@ -42,35 +42,46 @@ class EventPlaceholderWidget extends StatelessWidget {
 
     var guestIds = [2];
 
-    var model = new AddNewEventModel(
-        userId: (userId),
-        token: token,
-        caption: caption,
-        description: description,
-        start: scheduledStart,
-        duration: duration,
-        eventType: eventType,
-        eventStatus: eventStatus,
-        groupId: groupId,
-        guestIds: guestIds);
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-    var requestMap = model.toJson();
+    var cachedData = await mySharedPreferences.getDataIfNotExpired();
 
-    final url = Uri.parse('http://localhost:5201/events/schedule_new');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode(requestMap);
-    final response = await http.post(url, headers: headers, body: body);
+    if (cachedData != null){
+      var json = jsonDecode(cachedData.toString());
+      var cacheContent = ResponseWithToken.fromJson(json);
 
-    var jsonData = jsonDecode(response.body);
-    var responseContent = Response.fromJson(jsonData);
+      var userId = cacheContent.userId;
+      var token = cacheContent.token.toString();
 
-    if (responseContent.result){
-      if (responseContent.outInfo != null){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(responseContent.outInfo.toString())
-            )
-        );
+      var model = new AddNewEventModel(
+          userId: (userId),
+          token: token,
+          caption: caption,
+          description: description,
+          start: scheduledStart,
+          duration: duration,
+          eventType: eventType,
+          eventStatus: eventStatus,
+          groupId: groupId,
+          guestIds: guestIds);
+
+      var requestMap = model.toJson();
+
+      final url = Uri.parse('http://localhost:5201/events/schedule_new');
+      final headers = {'Content-Type': 'application/json'};
+      final body = jsonEncode(requestMap);
+      final response = await http.post(url, headers: headers, body: body);
+
+      var jsonData = jsonDecode(response.body);
+      var responseContent = Response.fromJson(jsonData);
+      if (responseContent.result){
+        if (responseContent.outInfo != null){
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(responseContent.outInfo.toString())
+              )
+          );
+        }
       }
     }
     else {
@@ -114,10 +125,14 @@ class EventPlaceholderWidget extends StatelessWidget {
             if(index == 0) ...[
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserInfoMapPage()),);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserInfoMapPage()),);
                 },
                 child: Text('Перейти к вашему календарю'),
               ),
+              SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()),);

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
+import 'package:todo_calendar_client/models/enums/DecisionType.dart';
+import 'package:todo_calendar_client/models/enums/EventType.dart';
+import 'package:todo_calendar_client/models/enums/GroupType.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/EventInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/GroupInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/ReportInfoResponse.dart';
+import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/TaskInfoResponse.dart';
-import 'package:todo_calendar_client/models/responses/UserInfoResponse.dart';
+import 'package:todo_calendar_client/models/responses/UserInfoWithDecisionResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
+import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 
+import 'models/enums/EventStatus.dart';
+import 'models/responses/additional_responces/ResponseWithToken.dart';
+
 class UserInfoMapPage extends StatefulWidget {
-
-  final int userId;
-  final String token;
-
-  UserInfoMapPage({this.userId = 1, this.token = '0895439408'});
 
   @override
   UserInfoMapPageState createState() => UserInfoMapPageState();
@@ -24,8 +27,11 @@ class UserInfoMapPage extends StatefulWidget {
 
 class UserInfoMapPageState extends State<UserInfoMapPage> {
 
-  static int userId = 1;
-  static String token = '0895439408';
+  @override
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
 
   final uri = 'http://localhost:5201/users/get_info';
   final headers = {'Content-Type': 'application/json'};
@@ -40,40 +46,82 @@ class UserInfoMapPageState extends State<UserInfoMapPage> {
 
   Future<void> getUserInfo() async {
 
-    var model = new UserInfoRequestModel(userId: userId, token: token);
-    var requestMap = model.toJson();
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-    var url = Uri.parse(uri);
-    final body = jsonEncode(requestMap);
+    var cachedData = await mySharedPreferences.getDataIfNotExpired();
 
-    final response = await http.post(url, headers: headers, body: body);
+    if (cachedData != null){
+      var json = jsonDecode(cachedData.toString());
+      var cacheContent = ResponseWithToken.fromJson(json);
 
-    var jsonData = jsonDecode(response.body);
-    var responseContent = GetResponse.fromJson(jsonData);
+      var userId = cacheContent.userId;
+      var token = cacheContent.token.toString();
 
-    if (responseContent.result) {
-      var userRequestedInfo = responseContent.requestedInfo.toString();
+      var model = new UserInfoRequestModel(userId: userId, token: token);
+      var requestMap = model.toJson();
 
-      var data = jsonDecode(userRequestedInfo);
-      var userInfo = UserInfoResponse.fromJson(data);
+      var url = Uri.parse(uri);
+      final body = jsonEncode(requestMap);
 
-      setState(() {
-        eventsList =
-          List<EventInfoResponse>
-              .from(userInfo.userEvents);
+      final response = await http.post(url, headers: headers, body: body);
 
-        groupsList =
-          List<GroupInfoResponse>
-              .from(userInfo.userGroups);
+      var jsonData = jsonDecode(response.body);
+      var responseContent = GetResponse.fromJson(jsonData);
 
-        tasksList =
-          List<TaskInfoResponse>
-            .from(userInfo.userTasks);
+      if (responseContent.result) {
+        var userRequestedInfo = responseContent.requestedInfo.toString();
 
-        reportsList =
-          List<ReportInfoResponse>
-            .from(userInfo.userReports);
-      });
+        var data = jsonDecode(userRequestedInfo);
+        var userEvents = data['user_events'];
+        var userGroups = data['user_groups'];
+        var userTasks = data['user_tasks'];
+        var userReports = data['user_reports'];
+
+        var caption = "New december olimpiad discussion";
+        var description = "Discussion about ICPC decemper tour olimpiad";
+        var start = new DateTime(2023, 11, 17, 12, 0, 0);
+        var duration = "00:30:00";
+        var eventType = EventType.OneToOne;
+        var eventStatus = EventStatus.NotStarted;
+
+        var manager = new ShortUserInfoResponse(
+            userName: "userName",
+            userEmail: "userEmail",
+            phoneNumber: "phoneNumber");
+
+        List<ShortUserInfoResponse> participants = [manager];
+
+        var group = new GroupInfoResponse(
+            groupName: "groupName",
+            groupType: GroupType.Educational,
+            participants: participants);
+
+        var userWithDecision = new UserInfoWithDecisionResponse(
+            userName: "userName",
+            userEmail: "userEmail",
+            phoneNumber: "phoneNumber",
+            decisionType: DecisionType.Apply);
+
+        List<UserInfoWithDecisionResponse> guests = [userWithDecision];
+
+        var event = new EventInfoResponse(
+            caption: caption,
+            description: description,
+            start: start,
+            duration: duration,
+            eventType: eventType,
+            eventStatus: eventStatus,
+            manager: manager,
+            group: group,
+            guests: guests);
+
+        List<EventInfoResponse> events = [event, event];
+
+        setState(() {
+          eventsList = events;
+
+        });
+      }
     }
     else {
       setState(() {
@@ -100,14 +148,6 @@ class UserInfoMapPageState extends State<UserInfoMapPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    userId = widget.userId;
-    token = widget.token;
-    getUserInfo();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -118,7 +158,8 @@ class UserInfoMapPageState extends State<UserInfoMapPage> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => UserPage()),);
+                MaterialPageRoute(
+                    builder: (context) => UserPage()),);
             },
           ),
         ),
@@ -175,7 +216,7 @@ class UserInfoMapPageState extends State<UserInfoMapPage> {
                         ),
                       ),
                       Text(
-                        data.start.toLocal().toString(),
+                        data.start.toString(),
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -258,7 +299,8 @@ class UserInfoMapPageState extends State<UserInfoMapPage> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => UserPage()),);
+                MaterialPageRoute(
+                    builder: (context) => UserPage()),);
             },
           ),
         ),
@@ -332,7 +374,8 @@ class UserInfoMapPageState extends State<UserInfoMapPage> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => UserPage()),);
+                MaterialPageRoute(
+                    builder: (context) => UserPage()),);
             },
           ),
         ),
@@ -446,7 +489,8 @@ class UserInfoMapPageState extends State<UserInfoMapPage> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => UserPage()),);
+                MaterialPageRoute(
+                    builder: (context) => UserPage()),);
             },
           ),
         ),
