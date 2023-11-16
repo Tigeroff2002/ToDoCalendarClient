@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_calendar_client/additional_page.dart';
 import 'package:todo_calendar_client/user_info_map.dart';
 import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/api_requests.dart';
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Создание мероприятий в календаре',
+      title: 'Многозадачный календарь',
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
@@ -23,8 +24,9 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/user_page': (context) => UserPage(),
-        '/events_page': (context) => UserInfoMapPage()
+        '/session/user_page': (context) => UserPage(),
+        '/session/events_page': (context) => UserInfoMapPage(),
+        '/session/additional_page': (context) => AdditionalPageWidget()
       },
     );
   }

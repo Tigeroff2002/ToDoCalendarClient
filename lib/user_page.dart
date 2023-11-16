@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:todo_calendar_client/widgets/EventPlaceholderWidget.dart';
 import 'package:todo_calendar_client/widgets/GroupPlaceholderWidget.dart';
@@ -29,6 +31,24 @@ class _HomeState extends State<Home> {
   @override
   void initState(){
     super.initState();
+  }
+
+  String url_picture = "https://source.unsplash.com/random/800x600";
+
+  void changeURLByClick() {
+    setState(() {
+      url_picture = "https://source.unsplash.com/random/800x600/?" +
+          "q=${new DateTime.now().millisecondsSinceEpoch}";
+    });
+  }
+
+  void changeURLOnTimer() {
+    Timer.periodic(Duration(seconds: 3), (timer) {
+      setState(() {
+        url_picture = "https://source.unsplash.com/random/800x600/?" +
+            "q=${new DateTime.now().millisecondsSinceEpoch}";
+      });
+    });
   }
 
   final List<Widget> _children = [

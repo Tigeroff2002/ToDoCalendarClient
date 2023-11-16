@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_calendar_client/additional_page.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_info_map.dart';
 import 'dart:convert';
@@ -153,9 +154,31 @@ class EventPlaceholderWidget extends StatelessWidget {
                   minimumSize: Size(150, 60),
                 ),
                 onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AdditionalPageWidget()),);
+                },
+                child: Text('Страничка с картинками'),
+              ),
+              SizedBox(height: 30.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.greenAccent,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(36.0)),
+                  minimumSize: Size(150, 60),
+                ),
+                onPressed: () {
                   MySharedPreferences mySharedPreferences = new MySharedPreferences();
                   mySharedPreferences.clearData();
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()),);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage()),);
                 },
                 child: Text('Выйти'),
               ),
