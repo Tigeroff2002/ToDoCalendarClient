@@ -1,16 +1,9 @@
-# todo_calendar_client
+# ToDoCalendar
+Курсовой проект по мобильной разработке.
+Представляет приложение на операционной системе Android, предназначенное для планирования рабочих, учебных и личных мероприятий человека,
+синхронизации взаимодействий людей в группах, напоминания о запланированных мероприятиях и задачах.
+А также о составлении отчетов по мероприятиям, событиям и задачам пользователя.
 
-A new Flutter project for course work
+My calendar app logo:
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![calendar_logo](https://github.com/Tigeroff2002/ToDoCalendar/assets/99354644/25ef1827-429b-4793-ac77-ae0c5bcc8c74)
