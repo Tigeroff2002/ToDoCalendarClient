@@ -13,6 +13,8 @@ class RegisterPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
 
+  bool isAlerted = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,10 +88,9 @@ class RegisterPage extends StatelessWidget {
     var jsonData = jsonDecode(response.body);
     var responseContent = ResponseWithToken.fromJson(jsonData);
 
-    var userId = responseContent.userId;
-    var token = responseContent.token.toString();
-
     MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+    await mySharedPreferences.clearData();
 
     await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
 
@@ -106,8 +107,7 @@ class RegisterPage extends StatelessWidget {
               builder: (context)
                 => UserPage()));
     }
-    else
-    {
+    else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

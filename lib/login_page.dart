@@ -10,6 +10,8 @@ class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  bool isAlerted = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +69,8 @@ class LoginPage extends StatelessWidget {
 
     MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
+    await mySharedPreferences.clearData();
+
     await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
 
     if (responseContent.result) {
@@ -75,7 +79,7 @@ class LoginPage extends StatelessWidget {
         MaterialPageRoute(builder: (context)
           => UserPage()),
       );
-    } else {
+    }else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -95,5 +99,41 @@ class LoginPage extends StatelessWidget {
 
     emailController.clear();
     passwordController.clear();
+  }
+
+  showAppDialog(BuildContext context) {
+    print("Showing app dialog");
+    showDialog(context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text(
+              "This is a dialog that works.",
+            ),
+            icon: const Icon(Icons.delete),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("OK"),
+              ),
+            ],
+          );
+        });
+  }
+
+  Widget showAlertDialog(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(body: SafeArea(child: Builder(
+          builder: (context) {
+            return TextButton(child: Text("Show dialog"), onPressed: () => showAppDialog(context),);
+          }
+      ))),
+    );
   }
 }
