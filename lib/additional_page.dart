@@ -16,7 +16,7 @@ class _AdditionalPageState extends State<AdditionalPageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Список мероприятий'),
+          title: Text('Страничка с картинками'),
           leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -44,7 +44,6 @@ class _AdditionalPageState extends State<AdditionalPageWidget> {
           "q=${new DateTime.now().millisecondsSinceEpoch}";
     });
   }
-
 
   void changeURLByTimer() {
     Timer.periodic(Duration(seconds: 3), (timer) {

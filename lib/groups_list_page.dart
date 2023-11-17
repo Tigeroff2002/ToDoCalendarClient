@@ -73,7 +73,7 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
         List<ShortUserInfoResponse> participants = [manager];
 
         var group = new GroupInfoResponse(
-            groupName: "groupName",
+            groupName: "Add dot net please",
             groupType: GroupType.Educational,
             participants: participants);
 

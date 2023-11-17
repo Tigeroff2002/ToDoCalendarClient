@@ -70,7 +70,7 @@ class TasksListPageState extends State<TasksListPageWidget> {
             phoneNumber: "phoneNumber");
 
         var implementer = new ShortUserInfoResponse(
-            userName: "implementerName",
+            userName: "Kirill",
             userEmail: "implementerEmail",
             phoneNumber: "phoneNumber");
 

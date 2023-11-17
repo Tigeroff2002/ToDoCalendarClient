@@ -33,24 +33,6 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  String url_picture = "https://source.unsplash.com/random/800x600";
-
-  void changeURLByClick() {
-    setState(() {
-      url_picture = "https://source.unsplash.com/random/800x600/?" +
-          "q=${new DateTime.now().millisecondsSinceEpoch}";
-    });
-  }
-
-  void changeURLOnTimer() {
-    Timer.periodic(Duration(seconds: 3), (timer) {
-      setState(() {
-        url_picture = "https://source.unsplash.com/random/800x600/?" +
-            "q=${new DateTime.now().millisecondsSinceEpoch}";
-      });
-    });
-  }
-
   final List<Widget> _children = [
     EventPlaceholderWidget(
         color: Colors.red,

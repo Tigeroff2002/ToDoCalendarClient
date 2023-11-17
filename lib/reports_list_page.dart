@@ -66,24 +66,6 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
 
         var data = jsonDecode(userRequestedInfo);
         var userReports = data['user_reports'];
-
-        var reporter = new ShortUserInfoResponse(
-            userName: "reporterName",
-            userEmail: "reporterEmail",
-            phoneNumber: "phoneNumber");
-
-        var implementer = new ShortUserInfoResponse(
-            userName: "implementerName",
-            userEmail: "implementerEmail",
-            phoneNumber: "phoneNumber");
-
-        var task = new TaskInfoResponse(
-            caption: "Create new api specfication",
-            description: "Create new api asp .net core specfication",
-            taskType: TaskType.JobComplete,
-            taskStatus: TaskCurrentStatus.ToDo,
-            reporter: reporter,
-            implementer: implementer);
         
         var reportDescriptionResult =
           new ReportDescriptionResult(creationTime: DateTime.now());

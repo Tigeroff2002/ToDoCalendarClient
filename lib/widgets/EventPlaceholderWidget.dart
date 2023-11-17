@@ -203,21 +203,28 @@ class EventPlaceholderWidget extends StatelessWidget {
               TextField(
                 controller: scheduledStartController,
                 decoration: InputDecoration(
-                  labelText: 'Время начала мероприятия',
+                  labelText: 'Время начала мероприятия:',
+                ),
+              ),
+              SizedBox(height: 8.0),
+              TextField(
+                controller: durationController,
+                decoration: InputDecoration(
+                  labelText: 'Продолжительность мероприятия:',
                 ),
               ),
               SizedBox(height: 8.0),
               TextField(
                 controller: eventTypeController,
                 decoration: InputDecoration(
-                  labelText: 'Тип мероприятия',
+                  labelText: 'Тип мероприятия:',
                 ),
               ),
               SizedBox(height: 8.0),
               TextField(
                 controller: eventStatusController,
                 decoration: InputDecoration(
-                  labelText: 'Статус мероприятия',
+                  labelText: 'Статус мероприятия:',
                 ),
               ),
             ],
