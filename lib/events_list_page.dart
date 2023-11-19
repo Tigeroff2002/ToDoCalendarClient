@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:todo_calendar_client/EnumAliaser.dart';
+import 'package:todo_calendar_client/models/EventAppointment.dart';
+import 'package:todo_calendar_client/models/MeetingDataSource.dart';
 import 'package:todo_calendar_client/models/enums/DecisionType.dart';
 import 'package:todo_calendar_client/models/enums/EventType.dart';
 import 'package:todo_calendar_client/models/enums/GroupType.dart';
@@ -105,9 +108,54 @@ class EventsListPageState extends State<EventsListPageWidget> {
     }
   }
 
+  List<Appointment> getAppointments(List<EventInfoResponse> fetchedEvents){
+    MaterialColor color = Colors.blue;
+
+    List<EventAppointment> meetings =
+      List.from(
+          fetchedEvents.map((data) =>
+            new EventAppointment(
+                data.start,
+                data.duration,
+                data.caption)));
+
+    List<Appointment> appointments =
+        List.from(
+          meetings.map((data) =>
+            new Appointment(
+                startTime: data.startTime,
+                endTime: data.endTime,
+                subject: data.subject,
+                color: color)));
+
+    return appointments;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Календарь мероприятий'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserPage()),);
+            },
+          ),
+        ),
+        body: SfCalendar(
+          view: CalendarView.week,
+          firstDayOfWeek: 1,
+          initialDisplayDate: DateTime.now(),
+          initialSelectedDate: DateTime.now(),
+          dataSource: MeetingDataSource(getAppointments(eventsList)),
+        ),
+      ),
+      /*
       home: Scaffold(
         appBar: AppBar(
           title: Text('Список мероприятий'),
@@ -233,6 +281,7 @@ class EventsListPageState extends State<EventsListPageWidget> {
           },
         ),
       ),
+       */
     );
   }
 }
