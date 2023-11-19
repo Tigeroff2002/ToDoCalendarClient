@@ -115,4 +115,101 @@ final class EnumAliaser{
 
     return 'Без статуса';
   }
+
+  GroupType getGroupEnumValue(String naming){
+    if (naming == 'Educational'){
+      return GroupType.Educational;
+    }
+    else if (naming == 'Job'){
+      return GroupType.Job;
+    }
+    else return GroupType.None;
+  }
+
+  EventType getEventTypeEnumValue(String naming){
+    if (naming == 'Personal'){
+      return EventType.Personal;
+    }
+    else if (naming == 'OneToOne'){
+      return EventType.OneToOne;
+    }
+    else if (naming == 'StandUp'){
+      return EventType.StandUp;
+    }
+    else if (naming == 'Meeting'){
+      return EventType.Meeting;
+    }
+    else return EventType.None;
+  }
+
+  EventStatus getEventStatusEnumValue(String naming){
+    if (naming == 'NotStarted'){
+      return EventStatus.NotStarted;
+    }
+    else if (naming == 'WithinReminderOffset'){
+      return EventStatus.WithinReminderOffset;
+    }
+    else if (naming == 'Live'){
+      return EventStatus.Live;
+    }
+    else if (naming == 'Finished'){
+      return EventStatus.Finished;
+    }
+    else if (naming == 'Cancelled'){
+      return EventStatus.Cancelled;
+    }
+    else return EventStatus.None;
+  }
+
+  TaskType getTaskTypeEnumValue(String naming){
+    if (naming == 'AbstractGoal'){
+      return TaskType.AbstractGoal;
+    }
+    else if (naming == 'MeetingPresense'){
+      return TaskType.MeetingPresense;
+    }
+    else if (naming == 'JobComplete'){
+      return TaskType.JobComplete;
+    }
+    else return TaskType.None;
+  }
+
+  TaskCurrentStatus getTaskStatusEnumValue(String naming){
+    if (naming == 'ToDo'){
+      return TaskCurrentStatus.ToDo;
+    }
+    else if (naming == 'InProgress'){
+      return TaskCurrentStatus.InProgress;
+    }
+    else if (naming == 'Review'){
+      return TaskCurrentStatus.Review;
+    }
+    else if (naming == 'Done'){
+      return TaskCurrentStatus.Done;
+    }
+    else return TaskCurrentStatus.None;
+  }
+
+  ReportType getReportTypeEnumValue(String naming){
+    if (naming == 'EventsReport'){
+      return ReportType.EventsReport;
+    }
+    else if (naming == 'TasksReport'){
+      return ReportType.TasksReport;
+    }
+    else return ReportType.None;
+  }
+
+  DecisionType getDecisionTypeEnumValue(String naming){
+    if (naming == 'Default'){
+      return DecisionType.Default;
+    }
+    else if (naming == 'Apply'){
+      return DecisionType.Apply;
+    }
+    else if (naming == 'Deny'){
+      return DecisionType.Deny;
+    }
+    else return DecisionType.None;
+  }
 }

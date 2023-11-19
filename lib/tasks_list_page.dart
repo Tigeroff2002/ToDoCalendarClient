@@ -64,35 +64,13 @@ class TasksListPageState extends State<TasksListPageWidget> {
         var data = jsonDecode(userRequestedInfo);
         var userTasks = data['user_tasks'];
 
-        var reporter = new ShortUserInfoResponse(
-            userName: "reporterName",
-            userEmail: "reporterEmail",
-            phoneNumber: "phoneNumber");
-
-        var implementer = new ShortUserInfoResponse(
-            userName: "Kirill",
-            userEmail: "implementerEmail",
-            phoneNumber: "phoneNumber");
-
-        var task = new TaskInfoResponse(
-            caption: "Create new api specfication",
-            description: "Create new api asp .net core specfication",
-            taskType: TaskType.JobComplete,
-            taskStatus: TaskCurrentStatus.ToDo,
-            reporter: reporter,
-            implementer: implementer);
-
-        List<TaskInfoResponse> tasks = [task, task];
-
-        /*
         var fetchedTasks =
           List<TaskInfoResponse>
             .from(userTasks.map(
                 (data) => TaskInfoResponse.fromJson(data)));
-        */
 
         setState(() {
-          tasksList = tasks;
+          tasksList = fetchedTasks;
         });
       }
     }
@@ -189,7 +167,8 @@ class TasksListPageState extends State<TasksListPageWidget> {
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(data.taskType),
+                        aliaser.GetAlias(
+                            aliaser.getTaskTypeEnumValue(data.taskType)),
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -202,29 +181,13 @@ class TasksListPageState extends State<TasksListPageWidget> {
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(data.taskStatus),
+                        aliaser.GetAlias(
+                            aliaser.getTaskStatusEnumValue(data.taskStatus)),
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Имя имплементатора: ',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        data.implementer.userName,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      ElevatedButton(
-                        child: Text('Завершить задачу'),
-                        onPressed: () {},
-                      ),
+                      SizedBox(height: 8)
                     ],
                   ),
                 ),

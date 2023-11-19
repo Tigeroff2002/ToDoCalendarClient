@@ -42,7 +42,6 @@ class ReportPlaceholderWidget extends StatelessWidget {
       var userId = cacheContent.userId;
       var token = cacheContent.token.toString();
 
-
       var model = new AddNewReportModel(
           userId: (userId),
           token: token,

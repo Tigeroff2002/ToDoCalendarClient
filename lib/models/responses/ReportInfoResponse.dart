@@ -5,9 +5,9 @@ import 'package:todo_calendar_client/models/responses/ReportDescriptionResult.da
 
 class ReportInfoResponse {
 
-  final ReportType reportType;
-  final DateTime beginMoment;
-  final DateTime endMoment;
+  final String reportType;
+  final String beginMoment;
+  final String endMoment;
   final ReportDescriptionResult reportContent;
 
   ReportInfoResponse({

@@ -71,55 +71,13 @@ class EventsListPageState extends State<EventsListPageWidget> {
         var data = jsonDecode(userRequestedInfo);
         var userEvents = data['user_events'];
 
-        var caption = "New december olimpiad discussion";
-        var description = "Discussion about ICPC decemper tour olimpiad";
-        var start = new DateTime(2023, 11, 17, 12, 0, 0);
-        var duration = "00:30:00";
-        var eventType = EventType.OneToOne;
-        var eventStatus = EventStatus.NotStarted;
-
-        var manager = new ShortUserInfoResponse(
-            userName: "userName",
-            userEmail: "userEmail",
-            phoneNumber: "phoneNumber");
-
-        List<ShortUserInfoResponse> participants = [manager];
-
-        var group = new GroupInfoResponse(
-            groupName: "groupName",
-            groupType: GroupType.Educational,
-            participants: participants);
-
-        var userWithDecision = new UserInfoWithDecisionResponse(
-            userName: "userName",
-            userEmail: "userEmail",
-            phoneNumber: "phoneNumber",
-            decisionType: DecisionType.Apply);
-
-        List<UserInfoWithDecisionResponse> guests = [userWithDecision];
-
-        var event = new EventInfoResponse(
-            caption: caption,
-            description: description,
-            start: start,
-            duration: duration,
-            eventType: eventType,
-            eventStatus: eventStatus,
-            manager: manager,
-            group: group,
-            guests: guests);
-
-        List<EventInfoResponse> events = [event, event];
-
-        /*
         var fetchedEvents =
           List<EventInfoResponse>
               .from(userEvents.map(
                   (data) => EventInfoResponse.fromJson(data)));
-        */
 
         setState(() {
-          eventsList = events;
+          eventsList = fetchedEvents;
         });
       }
     }
@@ -242,7 +200,8 @@ class EventsListPageState extends State<EventsListPageWidget> {
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(data.eventType),
+                        aliaser.GetAlias(
+                            aliaser.getEventTypeEnumValue(data.eventType)),
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -255,20 +214,8 @@ class EventsListPageState extends State<EventsListPageWidget> {
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(data.eventStatus),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Название группы: ',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        data.group.groupName,
+                        aliaser.GetAlias(
+                            aliaser.getEventStatusEnumValue(data.eventStatus)),
                         style: TextStyle(
                           color: Colors.white,
                         ),

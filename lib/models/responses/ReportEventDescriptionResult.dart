@@ -6,7 +6,7 @@ class ReportEventDescriptionResult extends ReportDescriptionResult{
   final List<EventInfoResponse> userEvents;
 
   ReportEventDescriptionResult({
-    required DateTime creationTime,
+    required String creationTime,
     required this.userEvents
   })
     : super(creationTime: creationTime);

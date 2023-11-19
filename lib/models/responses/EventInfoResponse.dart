@@ -10,13 +10,13 @@ class EventInfoResponse {
 
   final String caption;
   final String description;
-  final DateTime start;
+  final String start;
   final String duration;
-  final EventType eventType;
-  final EventStatus eventStatus;
-  final ShortUserInfoResponse manager;
-  final GroupInfoResponse group;
-  final List<UserInfoWithDecisionResponse> guests;
+  final String eventType;
+  final String eventStatus;
+  //final ShortUserInfoResponse manager;
+  //final GroupInfoResponse group;
+  //final List<UserInfoWithDecisionResponse> guests;
 
   EventInfoResponse({
     required this.caption,
@@ -25,9 +25,9 @@ class EventInfoResponse {
     required this.duration,
     required this.eventType,
     required this.eventStatus,
-    required this.manager,
-    required this.group,
-    required this.guests
+    //required this.manager,
+    //required this.group,
+    //required this.guests
   });
 
   factory EventInfoResponse.fromJson(Map <String, dynamic> json) {
@@ -38,9 +38,9 @@ class EventInfoResponse {
       duration: json['duration'],
       eventType: json['event_type'],
       eventStatus: json['event_status'],
-      manager: json['manager'],
-      group: json['group'],
-      guests: json['guests']
+      //manager: json['manager'],
+      //group: json['group'],
+      //guests: json['guests']
     );
   }
 }

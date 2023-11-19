@@ -6,7 +6,7 @@ class ReportTaskDescriptionResult extends ReportDescriptionResult{
   final List<TaskInfoResponse> userTasks;
 
   ReportTaskDescriptionResult({
-    required DateTime creationTime,
+    required String creationTime,
     required this.userTasks
   })
       : super(creationTime: creationTime);

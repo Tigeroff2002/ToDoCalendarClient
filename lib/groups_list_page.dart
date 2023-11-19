@@ -65,29 +65,13 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
         var data = jsonDecode(userRequestedInfo);
         var userGroups = data['user_groups'];
 
-        var manager = new ShortUserInfoResponse(
-            userName: "userName",
-            userEmail: "userEmail",
-            phoneNumber: "phoneNumber");
-
-        List<ShortUserInfoResponse> participants = [manager];
-
-        var group = new GroupInfoResponse(
-            groupName: "Add dot net please",
-            groupType: GroupType.Educational,
-            participants: participants);
-
-        List<GroupInfoResponse> groups = [group, group];
-
-        /*
         var fetchedGroups =
           List<GroupInfoResponse>
             .from(userGroups.map(
                 (data) => GroupInfoResponse.fromJson(data)));
-        */
 
         setState(() {
-          groupsList = groups;
+          groupsList = fetchedGroups;
         });
       }
     }
@@ -164,13 +148,13 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Тип события: ',
+                        'Тип группы: ',
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(data.groupType),
+                        aliaser.GetAlias(aliaser.getGroupEnumValue(data.groupType)),
                         style: TextStyle(
                           color: Colors.white,
                         ),

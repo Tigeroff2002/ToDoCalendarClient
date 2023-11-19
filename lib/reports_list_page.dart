@@ -66,26 +66,14 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
 
         var data = jsonDecode(userRequestedInfo);
         var userReports = data['user_reports'];
-        
-        var reportDescriptionResult =
-          new ReportDescriptionResult(creationTime: DateTime.now());
 
-        var report = ReportInfoResponse(
-            reportType: ReportType.EventsReport,
-            beginMoment: new DateTime(2023, 10, 22, 0, 0, 0),
-            endMoment: new DateTime(2023, 11, 21, 0, 0, 0),
-            reportContent: reportDescriptionResult);
-
-        List<ReportInfoResponse> reports = [report, report];
-
-        /*
         var fetchedReports =
           List<ReportInfoResponse>
             .from(userReports.map(
                 (data) => ReportInfoResponse.fromJson(data)));
-        */
+
         setState(() {
-          reportsList = reports;
+          reportsList = fetchedReports;
         });
       }
     }
@@ -154,23 +142,10 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(data.reportType),
+                        aliaser.GetAlias(
+                            aliaser.getReportTypeEnumValue(data.reportType)),
                         style: TextStyle(
                           color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Время создания отчета: ',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        data.reportContent.creationTime.toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],

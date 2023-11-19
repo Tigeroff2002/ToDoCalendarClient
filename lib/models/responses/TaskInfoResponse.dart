@@ -8,18 +8,18 @@ class TaskInfoResponse {
 
   final String caption;
   final String description;
-  final TaskType taskType;
-  final TaskCurrentStatus taskStatus;
-  final ShortUserInfoResponse reporter;
-  final ShortUserInfoResponse implementer;
+  final String taskType;
+  final String taskStatus;
+  //final ShortUserInfoResponse reporter;
+  //final ShortUserInfoResponse implementer;
 
   TaskInfoResponse({
     required this.caption,
     required this.description,
     required this.taskType,
     required this.taskStatus,
-    required this.reporter,
-    required this.implementer
+    //required this.reporter,
+    //required this.implementer
   });
 
   factory TaskInfoResponse.fromJson(Map <String, dynamic> json) {
@@ -28,8 +28,8 @@ class TaskInfoResponse {
         description: json['description'],
         taskType: json['task_type'],
         taskStatus: json['task_status'],
-        reporter: json['reporter'],
-        implementer: json['implementer']
+        //reporter: json['reporter'],
+        //implementer: json['implementer']
     );
   }
 }
