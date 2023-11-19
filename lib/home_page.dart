@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todo_calendar_client/authorization_page.dart';
 import 'package:todo_calendar_client/login_page.dart';
 import 'package:todo_calendar_client/register_page.dart';
+import 'package:todo_calendar_client/shared_pref_cached_data.dart';
+import 'package:todo_calendar_client/user_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -24,32 +27,23 @@ class HomePage extends StatelessWidget {
                 minimumSize: Size(200, 80),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
+                MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+                var cachedData =
+                  mySharedPreferences.getDataIfNotExpired();
+
+                cachedData.then((value) =>
+                  value == null
+                      ?   Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AuthorizationPage()),)
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UserPage())));
               },
-              child: Text('Авторизация'),
+              child: Text('Запуск календаря'),
             ),
-            SizedBox(height: 40),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor : Colors.white,
-                shadowColor: Colors.greenAccent,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0)),
-                minimumSize: Size(200, 80),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
-                );
-              },
-              child: Text('Регистрация'),
-            ),
+            SizedBox(height: 40)
           ],
         ),
       ),
