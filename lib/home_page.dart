@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:todo_calendar_client/authorization_page.dart';
-import 'package:todo_calendar_client/login_page.dart';
-import 'package:todo_calendar_client/register_page.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 
 class HomePage extends StatelessWidget {
+
+  final String pictureUrl =
+      'https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_19_2x.png';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +45,10 @@ class HomePage extends StatelessWidget {
               },
               child: Text('Запуск календаря'),
             ),
-            SizedBox(height: 40)
+            SizedBox(height: 40),
+            GestureDetector(
+              child: Image.network(pictureUrl)
+            ),
           ],
         ),
       ),
