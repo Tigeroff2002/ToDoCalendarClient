@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/additional_page.dart';
@@ -113,6 +115,12 @@ class EventPlaceholderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final eventTypes = ['None', 'Personal', 'OneToOne', 'StandUp', 'Meeting'];
+    final eventStatuses = ['None', 'NotStarted', 'WithinReminderOffset', 'Live', 'Finished', 'Cancelled'];
+
+    final hours = selectedDateTime.hour.toString().padLeft(2, '0');
+    final minutes = selectedDateTime.minute.toString().padLeft(2, '0');
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -201,11 +209,52 @@ class EventPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 8.0),
               TextField(
-                controller: scheduledStartController,
                 decoration: InputDecoration(
                   labelText: 'Время начала мероприятия:',
                 ),
               ),
+              SizedBox(height: 2.0),
+              ElevatedButton(
+                child: Text('${selectedDateTime.year}/${selectedDateTime.month}'),
+                onPressed: () async {
+                  Future<DateTime?> pickDate() => showDatePicker(
+                      context: context,
+                      initialDate: selectedDateTime,
+                      firstDate: DateTime(2023),
+                      lastDate: DateTime(2025)
+                  );
+
+                  final date = await pickDate();
+
+                  if (date == null) return;
+
+                  selectedDateTime = date;
+                },
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                  child: ElevatedButton(
+                    child: Text('$hours/$minutes'),
+                    onPressed: () async {
+                      Future<TimeOfDay?> pickTime() => showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay(
+                              hour: selectedDateTime.hour + 1,
+                              minute: 0));
+
+                      final time = await pickTime();
+
+                      if (time == null) return;
+
+                      final newDateTime = DateTime(
+                        selectedDateTime.year,
+                        selectedDateTime.month,
+                        selectedDateTime.day,
+                        time.hour,
+                        time.minute
+                      );
+                    },
+                  )),
               SizedBox(height: 8.0),
               TextField(
                 controller: durationController,
@@ -215,18 +264,40 @@ class EventPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 8.0),
               TextField(
-                controller: eventTypeController,
                 decoration: InputDecoration(
                   labelText: 'Тип мероприятия:',
+                  hintText: 'Выберите тип мероприятия из списка..',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                 ),
               ),
+              SizedBox(height: 2.0),
+              DropdownButton(
+                  items: eventTypes.map((String type){
+                    return DropdownMenuItem(
+                        value: type,
+                        child: Text(type));
+                  }).toList(),
+                  onChanged: (String? newType){
+                    selectedEventType = newType.toString();
+                  }),
               SizedBox(height: 8.0),
               TextField(
-                controller: eventStatusController,
                 decoration: InputDecoration(
                   labelText: 'Статус мероприятия:',
+                    hintText: 'Выберите тип мероприятия из списка..',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                 ),
               ),
+              SizedBox(height: 2.0),
+              DropdownButton(
+                  items: eventStatuses.map((String status){
+                    return DropdownMenuItem(
+                        value: status,
+                        child: Text(status));
+                  }).toList(),
+                  onChanged: (String? newStatus){
+                    selectedEventStatus = newStatus.toString();
+                  }),
             ],
             if(index == 1) ...[
               SizedBox(height: 16.0),
@@ -241,4 +312,9 @@ class EventPlaceholderWidget extends StatelessWidget {
       ),
     );
   }
+
+  String selectedEventType = "None";
+  String selectedEventStatus = "None";
+
+  DateTime selectedDateTime = DateTime.now();
 }
