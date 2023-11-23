@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -38,8 +38,20 @@ class EventPlaceholderWidget extends StatelessWidget {
   {
     String caption = eventCaptionController.text;
     String description = eventDescriptionController.text;
-    String scheduledStart = scheduledStartController.text;
-    String duration = durationController.text;
+    String scheduledStart = selectedBeginDateTime.toString();
+
+    int durationMs =
+      selectedEndDateTime.millisecondsSinceEpoch
+          > selectedBeginDateTime.millisecondsSinceEpoch
+      ? selectedEndDateTime.difference(selectedBeginDateTime).inMilliseconds
+      : DateTime(0, 0, 0, 0, 30, 0).millisecondsSinceEpoch;
+
+    DateTime durationInDateTime = DateTime.fromMicrosecondsSinceEpoch(durationMs);
+
+    var format = DateFormat('hh:mm:ss');
+
+    var duration = format.format(durationInDateTime).toString();
+
     String eventType = eventTypeController.text;
     String eventStatus = eventStatusController.text;
 
@@ -115,11 +127,76 @@ class EventPlaceholderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    selectedBeginDateTime = DateTime.now();
+    selectedEndDateTime = DateTime.now();
     final eventTypes = ['None', 'Personal', 'OneToOne', 'StandUp', 'Meeting'];
     final eventStatuses = ['None', 'NotStarted', 'WithinReminderOffset', 'Live', 'Finished', 'Cancelled'];
 
-    final hours = selectedDateTime.hour.toString().padLeft(2, '0');
-    final minutes = selectedDateTime.minute.toString().padLeft(2, '0');
+    final beginHours = selectedBeginDateTime.hour.toString().padLeft(2, '0');
+    final beginMinutes = selectedBeginDateTime.minute.toString().padLeft(2, '0');
+
+    final showingBeginHours = (selectedBeginDateTime.hour + 1).toString().padLeft(2, '0');
+    final showingBeginMinutes = 0.toString().padLeft(2, '0');
+
+    final endHours = selectedEndDateTime.hour.toString().padLeft(2, '0');
+    final endMinutes = selectedEndDateTime.minute.toString().padLeft(2, '0');
+
+    final showingEndHours = (selectedEndDateTime.hour + 1).toString().padLeft(2, '0');
+    final showingEndMinutes = 0.toString().padLeft(2, '0');
+
+    Future<DateTime?> pickDate(DateTime selectedDateTime) => showDatePicker(
+        context: context,
+        initialDate: selectedDateTime,
+        firstDate: DateTime(2023),
+        lastDate: DateTime(2025)
+    );
+
+    Future<TimeOfDay?> pickTime(DateTime selectedDateTime) => showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(
+            hour: selectedDateTime.hour + 1,
+            minute: 0));
+
+    Future pickBeginDateTime() async {
+
+      DateTime? date = await pickDate(selectedBeginDateTime);
+      if (date == null) return;
+
+      final time = await pickTime(selectedBeginDateTime);
+
+      if (time == null) return;
+
+      final newDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute
+      );
+
+      selectedBeginDateTime = newDateTime;
+    }
+
+    Future pickEndDateTime() async {
+
+      DateTime? date = await pickDate(selectedEndDateTime);
+      if (date == null) return;
+
+      final time = await pickTime(selectedEndDateTime);
+
+      if (time == null) return;
+
+      final newDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute
+      );
+
+      selectedEndDateTime = newDateTime;
+    }
 
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -201,7 +278,7 @@ class EventPlaceholderWidget extends StatelessWidget {
                   labelText: 'Наименование мероприятия:',
                 ),
               ),
-              SizedBox(height: 8.0),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: eventDescriptionController,
                 maxLines: null,
@@ -209,70 +286,46 @@ class EventPlaceholderWidget extends StatelessWidget {
                   labelText: 'Описание меропрития:',
                 ),
               ),
-              SizedBox(height: 8.0),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Время начала мероприятия:',
-                ),
+              SizedBox(height: 12.0),
+              Text(
+                'Время начала мероприятия',
+                style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 2.0),
+              SizedBox(height: 6.0),
               ElevatedButton(
-                child: Text('${selectedDateTime.year}/${selectedDateTime.month}'),
+                child: Text(
+                    '${selectedBeginDateTime.year}'
+                        '/${selectedBeginDateTime.month}'
+                        '/${selectedBeginDateTime.day}'
+                        ' $showingBeginHours'
+                        ':$showingBeginMinutes'),
                 onPressed: () async {
-                  Future<DateTime?> pickDate() => showDatePicker(
-                      context: context,
-                      initialDate: selectedDateTime,
-                      firstDate: DateTime(2023),
-                      lastDate: DateTime(2025)
-                  );
-
-                  final date = await pickDate();
-
-                  if (date == null) return;
-
-                  selectedDateTime = date;
+                  await pickBeginDateTime();
                 },
               ),
-              SizedBox(width: 12),
-              Expanded(
-                  child: ElevatedButton(
-                    child: Text('$hours/$minutes'),
-                    onPressed: () async {
-                      Future<TimeOfDay?> pickTime() => showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay(
-                              hour: selectedDateTime.hour + 1,
-                              minute: 0));
-
-                      final time = await pickTime();
-
-                      if (time == null) return;
-
-                      final newDateTime = DateTime(
-                        selectedDateTime.year,
-                        selectedDateTime.month,
-                        selectedDateTime.day,
-                        time.hour,
-                        time.minute
-                      );
-                    },
-                  )),
-              SizedBox(height: 8.0),
-              TextField(
-                controller: durationController,
-                decoration: InputDecoration(
-                  labelText: 'Продолжительность мероприятия:',
-                ),
+              SizedBox(height: 12.0),
+              Text(
+                'Время окончания мероприятия',
+                style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 8.0),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Тип мероприятия:',
-                  hintText: 'Выберите тип мероприятия из списка..',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                ),
+              SizedBox(height: 6.0),
+              ElevatedButton(
+                child: Text(
+                    '${selectedEndDateTime.year}'
+                        '/${selectedEndDateTime.month}'
+                        '/${selectedEndDateTime.day}'
+                        ' $showingEndHours'
+                        ':$showingEndMinutes'),
+                onPressed: () async {
+                  await pickEndDateTime();
+                },
               ),
-              SizedBox(height: 2.0),
+              SizedBox(height: 12.0),
+              Text(
+                'Тип мероприятия',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 4.0),
               DropdownButton(
                   items: eventTypes.map((String type){
                     return DropdownMenuItem(
@@ -282,15 +335,12 @@ class EventPlaceholderWidget extends StatelessWidget {
                   onChanged: (String? newType){
                     selectedEventType = newType.toString();
                   }),
-              SizedBox(height: 8.0),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Статус мероприятия:',
-                    hintText: 'Выберите тип мероприятия из списка..',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                ),
+              SizedBox(height: 12.0),
+              Text(
+                'Статус мероприятия',
+                style: TextStyle(fontSize: 20),
               ),
-              SizedBox(height: 2.0),
+              SizedBox(height: 4.0),
               DropdownButton(
                   items: eventStatuses.map((String status){
                     return DropdownMenuItem(
@@ -319,5 +369,6 @@ class EventPlaceholderWidget extends StatelessWidget {
   String selectedEventType = "None";
   String selectedEventStatus = "None";
 
-  DateTime selectedDateTime = DateTime.now();
+  DateTime selectedBeginDateTime = DateTime.now();
+  DateTime selectedEndDateTime = DateTime.now();
 }
