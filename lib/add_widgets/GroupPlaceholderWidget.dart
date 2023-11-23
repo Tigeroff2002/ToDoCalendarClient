@@ -9,15 +9,30 @@ import 'package:todo_calendar_client/models/responses/additional_responces/Respo
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 import '../shared_pref_cached_data.dart';
 
-class GroupPlaceholderWidget extends StatelessWidget {
+class GroupPlaceholderWidget extends StatefulWidget{
+
   final Color color;
   final String text;
   final int index;
 
-  final TextEditingController groupNameController = TextEditingController();
-  final TextEditingController groupTypeController = TextEditingController();
+  GroupPlaceholderWidget({required this.color, required this.text, required this.index});
 
-  GroupPlaceholderWidget(
+  @override
+  GroupPlaceholderState createState(){
+    return new GroupPlaceholderState(color: color, text: text, index: index);
+  }
+}
+
+class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
+  final Color color;
+  final String text;
+  final int index;
+
+  bool isNameValidated = true;
+
+  final TextEditingController groupNameController = TextEditingController();
+
+  GroupPlaceholderState(
       {
         required this.color,
         required this.text,
@@ -27,7 +42,7 @@ class GroupPlaceholderWidget extends StatelessWidget {
   Future<void> addNewGroup(BuildContext context) async
   {
     String name = groupNameController.text;
-    String groupType = groupTypeController.text;
+    String groupType = selectedGroupType;
 
     var participants = [2, 3];
 
@@ -70,6 +85,8 @@ class GroupPlaceholderWidget extends StatelessWidget {
           );
         }
       }
+
+      groupNameController.clear();
     }
     else {
       showDialog(
@@ -88,9 +105,6 @@ class GroupPlaceholderWidget extends StatelessWidget {
         ),
       );
     }
-
-    groupNameController.clear();
-    groupTypeController.clear();
   }
 
   @override
@@ -108,29 +122,15 @@ class GroupPlaceholderWidget extends StatelessWidget {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.0),
-            if(index == 0) ...[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UserInfoMapPage()),);
-                },
-                child: Text('Перейти к вашему календарю'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()),);
-                },
-                child: Text('Выйти'),
-              ),
-            ],
             if(index == 2) ...[
               SizedBox(height: 8.0),
               TextField(
                 controller: groupNameController,
                 decoration: InputDecoration(
                   labelText: 'Наименование группы:',
+                    errorText: !isNameValidated
+                        ? 'Название группы не может быть пустым'
+                        : null
                 ),
               ),
               SizedBox(height: 12.0),
@@ -140,20 +140,27 @@ class GroupPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               DropdownButton(
+                  value: selectedGroupType,
                   items: groupTypes.map((String type){
                     return DropdownMenuItem(
                         value: type,
                         child: Text(type));
                   }).toList(),
                   onChanged: (String? newType){
-                    selectedGroupType = newType.toString();
+                    setState(() {
+                      selectedGroupType = newType.toString();
+                    });
                   }),
             ],
             if(index == 2) ...[
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  addNewGroup(context);
+                  isNameValidated = !groupNameController.text.isEmpty;
+
+                  if (isNameValidated){
+                    addNewGroup(context);
+                  }
                 },
                 child: Text('Создать новую группу'),
               ),

@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:todo_calendar_client/widgets/EventPlaceholderWidget.dart';
-import 'package:todo_calendar_client/widgets/GroupPlaceholderWidget.dart';
-import 'package:todo_calendar_client/widgets/TaskPlaceholderWidget.dart';
-import 'package:todo_calendar_client/widgets/ReportPlaceholderWidget.dart';
+import 'package:todo_calendar_client/add_widgets/EventPlaceholderWidget.dart';
+import 'package:todo_calendar_client/add_widgets/GroupPlaceholderWidget.dart';
+import 'package:todo_calendar_client/add_widgets/TaskPlaceholderWidget.dart';
+import 'package:todo_calendar_client/add_widgets/ReportPlaceholderWidget.dart';
+import 'package:todo_calendar_client/personal_account.dart';
 
 class UserPage extends StatelessWidget {
 
@@ -34,7 +35,7 @@ class _HomeState extends State<Home> {
   }
 
   final List<Widget> _children = [
-    EventPlaceholderWidget(
+    PersonalAccount(
         color: Colors.red,
         text: 'Главная страница пользователя',
         index: 0

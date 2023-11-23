@@ -9,27 +9,40 @@ import 'package:todo_calendar_client/models/responses/additional_responces/Respo
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 import '../shared_pref_cached_data.dart';
 
-class ReportPlaceholderWidget extends StatelessWidget {
+class ReportPlaceholderWidget extends StatefulWidget{
+
+  final Color color;
+  final String text;
+  final int index;
+
+  ReportPlaceholderWidget({required this.color, required this.text, required this.index});
+
+  @override
+  ReportPlaceholderState createState(){
+    return new ReportPlaceholderState(color: color, text: text, index: index);
+  }
+}
+
+class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
+
   final Color color;
   final String text;
   final int index;
 
   final TextEditingController reportTypeController = TextEditingController();
-  final TextEditingController beginMomentController = TextEditingController();
-  final TextEditingController endMomentController = TextEditingController();
 
-  ReportPlaceholderWidget(
+  ReportPlaceholderState(
       {
         required this.color,
         required this.text,
         required this.index
       });
 
-  Future<void> addNewGroup(BuildContext context) async
+  Future<void> addNewReport(BuildContext context) async
   {
     String reportType = reportTypeController.text;
-    String beginMoment = beginMomentController.text;
-    String endMoment = endMomentController.text;
+    String beginMoment = selectedBeginDateTime.toString();
+    String endMoment = selectedEndDateTime.toString();
 
     MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
@@ -70,6 +83,7 @@ class ReportPlaceholderWidget extends StatelessWidget {
           );
         }
       }
+      reportTypeController.clear();
     }
     else {
       showDialog(
@@ -88,10 +102,6 @@ class ReportPlaceholderWidget extends StatelessWidget {
         ),
       );
     }
-
-    reportTypeController.clear();
-    beginMomentController.clear();
-    endMomentController.clear();
   }
 
   @override
@@ -179,23 +189,6 @@ class ReportPlaceholderWidget extends StatelessWidget {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.0),
-            if(index == 0) ...[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UserInfoMapPage()),);
-                },
-                child: Text('Перейти к вашему календарю'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()),);
-                },
-                child: Text('Выйти'),
-              ),
-            ],
             if(index == 4) ...[
               SizedBox(height: 16.0),
               Text(
@@ -204,13 +197,16 @@ class ReportPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               DropdownButton(
+                  value: selectedReportType,
                   items: reportTypes.map((String type){
                     return DropdownMenuItem(
                         value: type,
                         child: Text(type));
                   }).toList(),
                   onChanged: (String? newType){
-                    selectedReportType = newType.toString();
+                    setState(() {
+                      selectedReportType = newType.toString();
+                    });
                   }),
               SizedBox(height: 12.0),
               Text(
@@ -219,6 +215,15 @@ class ReportPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.cyan,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  minimumSize: Size(250, 100),
+                ),
                 child: Text(
                     '${selectedBeginDateTime.year}'
                         '/${selectedBeginDateTime.month}'
@@ -236,6 +241,15 @@ class ReportPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.cyan,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  minimumSize: Size(250, 100),
+                ),
                 child: Text(
                     '${selectedEndDateTime.year}'
                         '/${selectedEndDateTime.month}'
@@ -251,7 +265,7 @@ class ReportPlaceholderWidget extends StatelessWidget {
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  addNewGroup(context);
+                  addNewReport(context);
                 },
                 child: Text('Создать новый отчет'),
               ),

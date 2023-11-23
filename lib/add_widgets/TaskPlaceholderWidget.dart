@@ -9,17 +9,32 @@ import 'package:todo_calendar_client/models/responses/additional_responces/Respo
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 import '../shared_pref_cached_data.dart';
 
-class TaskPlaceholderWidget extends StatelessWidget {
+class TaskPlaceholderWidget extends StatefulWidget{
+
+  final Color color;
+  final String text;
+  final int index;
+
+  TaskPlaceholderWidget({required this.color, required this.text, required this.index});
+
+  @override
+  TaskPlaceholderState createState(){
+    return new TaskPlaceholderState(color: color, text: text, index: index);
+  }
+}
+
+class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
   final Color color;
   final String text;
   final int index;
 
   final TextEditingController taskCaptionController = TextEditingController();
   final TextEditingController taskDescriptionController = TextEditingController();
-  final TextEditingController taskTypeController = TextEditingController();
-  final TextEditingController taskStatusController = TextEditingController();
 
-  TaskPlaceholderWidget(
+  bool isCaptionValidated = true;
+  bool isDescriptionValidated = true;
+
+  TaskPlaceholderState(
       {
         required this.color,
         required this.text,
@@ -29,9 +44,9 @@ class TaskPlaceholderWidget extends StatelessWidget {
   Future<void> addNewTask(BuildContext context) async
   {
     String caption = taskCaptionController.text;
-    String description = taskStatusController.text;
-    String taskType = taskTypeController.text;
-    String taskStatus = taskStatusController.text;
+    String description = taskDescriptionController.text;
+    String taskType = selectedTaskType.toString();
+    String taskStatus = selectedTaskStatus.toString();
 
     var implementerId = 3;
 
@@ -76,6 +91,8 @@ class TaskPlaceholderWidget extends StatelessWidget {
           );
         }
       }
+      taskCaptionController.clear();
+      taskDescriptionController.clear();
     }
     else {
       showDialog(
@@ -94,11 +111,6 @@ class TaskPlaceholderWidget extends StatelessWidget {
         ),
       );
     }
-
-    taskCaptionController.clear();
-    taskDescriptionController.clear();
-    taskTypeController.clear();
-    taskStatusController.clear();
   }
 
   @override
@@ -117,29 +129,15 @@ class TaskPlaceholderWidget extends StatelessWidget {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.0),
-            if(index == 0) ...[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UserInfoMapPage()),);
-                },
-                child: Text('Перейти к вашему календарю'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()),);
-                },
-                child: Text('Выйти'),
-              ),
-            ],
             if(index == 3) ...[
               SizedBox(height: 12.0),
               TextField(
                 controller: taskCaptionController,
                 decoration: InputDecoration(
                   labelText: 'Наименование задачи: ',
+                    errorText: !isCaptionValidated
+                        ? 'Название задачи не может быть пустым'
+                        : null
                 ),
               ),
               SizedBox(height: 12.0),
@@ -148,6 +146,9 @@ class TaskPlaceholderWidget extends StatelessWidget {
                 maxLines: null,
                 decoration: InputDecoration(
                   labelText: 'Описание задачи: ',
+                    errorText: !isDescriptionValidated
+                        ? 'Описание мероприятия не может быть пустым'
+                        : null
                 ),
               ),
               SizedBox(height: 12.0),
@@ -157,13 +158,16 @@ class TaskPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               DropdownButton(
+                  value: selectedTaskType,
                   items: taskTypes.map((String type){
                     return DropdownMenuItem(
                         value: type,
                         child: Text(type));
                   }).toList(),
                   onChanged: (String? newType){
-                    selectedTaskType = newType.toString();
+                    setState(() {
+                      selectedTaskType = newType.toString();
+                    });
                   }),
               SizedBox(height: 12.0),
               Text(
@@ -172,20 +176,30 @@ class TaskPlaceholderWidget extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               DropdownButton(
+                  value: selectedTaskStatus,
                   items: taskStatuses.map((String status){
                     return DropdownMenuItem(
                         value: status,
                         child: Text(status));
                   }).toList(),
                   onChanged: (String? newStatus){
-                    selectedTaskStatus = newStatus.toString();
+                    setState(() {
+                      selectedTaskStatus = newStatus.toString();
+                    });
                   }),
             ],
             if(index == 3) ...[
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  addNewTask(context);
+                  setState(() {
+                    isCaptionValidated = !taskCaptionController.text.isEmpty;
+                    isDescriptionValidated = !taskDescriptionController.text.isEmpty;
+
+                    if (isCaptionValidated && isDescriptionValidated){
+                      addNewTask(context);
+                    }
+                  });
                 },
                 child: Text('Создать новую задачу'),
               ),
