@@ -5,11 +5,17 @@ import 'package:todo_calendar_client/user_page.dart';
 
 class HomePage extends StatelessWidget {
 
-  final String pictureUrl =
-      'https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_19_2x.png';
+  final String pictureUrlPart1 =
+      'https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_';
+
+  final String pictureUrlPart2 = '_2x.png';
 
   @override
   Widget build(BuildContext context) {
+
+    var monthDayNumber = DateTime.now().day.toString();
+    var pictureUrl = pictureUrlPart1 + monthDayNumber + pictureUrlPart2;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Календарь Tigeroff приветствует вас сегодня !'),

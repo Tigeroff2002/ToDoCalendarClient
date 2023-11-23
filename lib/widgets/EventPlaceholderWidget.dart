@@ -123,7 +123,9 @@ class EventPlaceholderWidget extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: Column(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(32),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -310,6 +312,7 @@ class EventPlaceholderWidget extends StatelessWidget {
             ],
           ]
       ),
+    )
     );
   }
 
