@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,9 +7,27 @@ import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 import 'dart:convert';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget{
+  @override
+  LoginPageState createState(){
+    return new LoginPageState();
+  }
+}
+
+class LoginPageState extends State<LoginPage> {
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  bool isEmailValidated = true;
+  bool isPasswordValidated = true;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +44,9 @@ class LoginPage extends StatelessWidget {
               controller: emailController,
               decoration: InputDecoration(
                 labelText: 'Электронная почта: ',
+                errorText: !isEmailValidated
+                    ? 'Почта не может быть пустой'
+                    : null
               ),
             ),
             SizedBox(height: 16.0),
@@ -36,9 +55,12 @@ class LoginPage extends StatelessWidget {
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Пароль: ',
+                  errorText: !isPasswordValidated
+                      ? 'Пароль не может быть пустым'
+                      : null
               ),
             ),
-            SizedBox(height: 25.0),
+            SizedBox(height: 30.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
@@ -50,7 +72,14 @@ class LoginPage extends StatelessWidget {
                 minimumSize: Size(150, 60),
               ),
               onPressed: () {
-                login(context);
+                setState(() {
+                  isEmailValidated = !emailController.text.isEmpty;
+                  isPasswordValidated = !passwordController.text.isEmpty;
+
+                  if (isEmailValidated && isPasswordValidated){
+                    login(context);
+                  }
+                });
               },
               child: Text('Войти'),
             ),

@@ -6,12 +6,33 @@ import 'dart:convert';
 import 'package:todo_calendar_client/user_page.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget{
+  @override
+  RegisterPageState createState(){
+    return new RegisterPageState();
+  }
+}
+
+class RegisterPageState extends State<RegisterPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
+
+  bool isEmailValidated = true;
+  bool isNameValidated = true;
+  bool isPasswordValidated = true;
+  bool isPhoneValidated = true;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+    phoneNumberController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +49,9 @@ class RegisterPage extends StatelessWidget {
               controller: emailController,
               decoration: InputDecoration(
                 labelText: 'Электронная почта: ',
+                  errorText: !isEmailValidated
+                      ? 'Почта не может быть пустой'
+                      : null
               ),
             ),
             SizedBox(height: 16.0),
@@ -35,6 +59,9 @@ class RegisterPage extends StatelessWidget {
               controller: usernameController,
               decoration: InputDecoration(
                 labelText: 'Имя пользователя: ',
+                  errorText: !isNameValidated
+                      ? 'Имя не может быть пустым'
+                      : null
               ),
             ),
             TextField(
@@ -42,6 +69,9 @@ class RegisterPage extends StatelessWidget {
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Пароль: ',
+                  errorText: !isPasswordValidated
+                      ? 'Пароль не может быть пустым'
+                      : null
               ),
             ),
             SizedBox(height: 30.0),
@@ -49,8 +79,12 @@ class RegisterPage extends StatelessWidget {
               controller: phoneNumberController,
               decoration: InputDecoration(
                 labelText: 'Номер телефона: ',
+                  errorText: !isPhoneValidated
+                      ? 'Номер телефона не может быть пустым'
+                      : null
               ),
             ),
+            SizedBox(height: 30.0),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -62,7 +96,17 @@ class RegisterPage extends StatelessWidget {
                   minimumSize: Size(150, 60),
                 ),
               onPressed: () {
-                register(context);
+                setState(() {
+                  isEmailValidated = !emailController.text.isEmpty;
+                  isNameValidated = !usernameController.text.isEmpty;
+                  isPasswordValidated = !passwordController.text.isEmpty;
+                  isPhoneValidated = !phoneNumberController.text.isEmpty;
+
+                  if (isEmailValidated && isPasswordValidated
+                        && isNameValidated && isPhoneValidated){
+                    register(context);
+                  }
+                });
               },
               child: Text('Зарегистрироваться'),
             ),
