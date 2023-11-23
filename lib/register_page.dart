@@ -13,8 +13,6 @@ class RegisterPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
 
-  bool isAlerted = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,17 +92,18 @@ class RegisterPage extends StatelessWidget {
 
     final response = await http.post(url, headers: headers, body: body);
 
-    var jsonData = jsonDecode(response.body);
-    var responseContent = ResponseWithToken.fromJson(jsonData);
-
-    MySharedPreferences mySharedPreferences = new MySharedPreferences();
-
-    await mySharedPreferences.clearData();
-
-    await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
-
-    if (responseContent.result)
+    if (response.statusCode == 200)
     {
+      var jsonData = jsonDecode(response.body);
+
+      var responseContent = ResponseWithToken.fromJson(jsonData);
+
+      MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+      await mySharedPreferences.clearData();
+
+      await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(responseContent.outInfo.toString()),
@@ -115,6 +114,11 @@ class RegisterPage extends StatelessWidget {
           MaterialPageRoute(
               builder: (context)
                 => UserPage()));
+
+      usernameController.clear();
+      emailController.clear();
+      passwordController.clear();
+      phoneNumberController.clear();
     }
     else {
       showDialog(
@@ -132,11 +136,8 @@ class RegisterPage extends StatelessWidget {
           ],
         ),
       );
-    }
 
-    usernameController.clear();
-    emailController.clear();
-    passwordController.clear();
-    phoneNumberController.clear();
+      passwordController.clear();
+    }
   }
 }

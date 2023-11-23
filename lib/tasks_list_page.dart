@@ -119,7 +119,7 @@ class TasksListPageState extends State<TasksListPageWidget> {
           itemBuilder: (context, index) {
             final data = tasksList[index];
             return Card(
-              color: isColor ? Colors.red : Colors.teal,
+              color: isColor ? Colors.cyan : Colors.greenAccent,
               elevation: 15,
               child: InkWell(
                 onTap: () {

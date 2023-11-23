@@ -148,9 +148,9 @@ class EventsListPageState extends State<EventsListPageWidget> {
           ),
         ),
         body: SfCalendar(
-          view: CalendarView.week,
+          view: CalendarView.timelineDay,
           firstDayOfWeek: 1,
-          initialDisplayDate: DateTime(2023, 11, 13),
+          initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
           dataSource: MeetingDataSource(getAppointments(eventsList)),
         ),

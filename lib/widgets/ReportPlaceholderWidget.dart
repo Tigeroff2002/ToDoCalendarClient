@@ -57,10 +57,11 @@ class ReportPlaceholderWidget extends StatelessWidget {
       final body = jsonEncode(requestMap);
       final response = await http.post(url, headers: headers, body: body);
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = Response.fromJson(jsonData);
+      if (response.statusCode == 200) {
 
-      if (responseContent.result) {
+        var jsonData = jsonDecode(response.body);
+        var responseContent = Response.fromJson(jsonData);
+
         if (responseContent.outInfo != null) {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -95,6 +96,79 @@ class ReportPlaceholderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var reportTypes = ['None', 'EventsReport', 'TasksReport'];
+
+    selectedBeginDateTime = DateTime.now();
+    selectedEndDateTime = DateTime.now();
+    final eventTypes = ['None', 'Personal', 'OneToOne', 'StandUp', 'Meeting'];
+    final eventStatuses = ['None', 'NotStarted', 'WithinReminderOffset', 'Live', 'Finished', 'Cancelled'];
+
+    final beginHours = selectedBeginDateTime.hour.toString().padLeft(2, '0');
+    final beginMinutes = selectedBeginDateTime.minute.toString().padLeft(2, '0');
+
+    final showingBeginHours = (selectedBeginDateTime.hour + 1).toString().padLeft(2, '0');
+    final showingBeginMinutes = 0.toString().padLeft(2, '0');
+
+    final endHours = selectedEndDateTime.hour.toString().padLeft(2, '0');
+    final endMinutes = selectedEndDateTime.minute.toString().padLeft(2, '0');
+
+    final showingEndHours = (selectedEndDateTime.hour + 1).toString().padLeft(2, '0');
+    final showingEndMinutes = 0.toString().padLeft(2, '0');
+
+    Future<DateTime?> pickDate(DateTime selectedDateTime) => showDatePicker(
+        context: context,
+        initialDate: selectedDateTime,
+        firstDate: DateTime(2023),
+        lastDate: DateTime(2025)
+    );
+
+    Future<TimeOfDay?> pickTime(DateTime selectedDateTime) => showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(
+            hour: selectedDateTime.hour + 1,
+            minute: 0));
+
+    Future pickBeginDateTime() async {
+
+      DateTime? date = await pickDate(selectedBeginDateTime);
+      if (date == null) return;
+
+      final time = await pickTime(selectedBeginDateTime);
+
+      if (time == null) return;
+
+      final newDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute
+      );
+
+      selectedBeginDateTime = newDateTime;
+    }
+
+    Future pickEndDateTime() async {
+
+      DateTime? date = await pickDate(selectedEndDateTime);
+      if (date == null) return;
+
+      final time = await pickTime(selectedEndDateTime);
+
+      if (time == null) return;
+
+      final newDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute
+      );
+
+      selectedEndDateTime = newDateTime;
+    }
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -123,28 +197,54 @@ class ReportPlaceholderWidget extends StatelessWidget {
               ),
             ],
             if(index == 4) ...[
-              SizedBox(height: 8.0),
-              TextField(
-                controller: reportTypeController,
-                decoration: InputDecoration(
-                  labelText: 'Тип отчета: ',
-                ),
+              SizedBox(height: 16.0),
+              Text(
+                'Тип отчета',
+                style: TextStyle(fontSize: 20),
               ),
-              SizedBox(height: 8.0),
-              TextFormField(
-                controller: beginMomentController,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: 'Время начала отчета: ',
-                ),
+              SizedBox(height: 4.0),
+              DropdownButton(
+                  items: reportTypes.map((String type){
+                    return DropdownMenuItem(
+                        value: type,
+                        child: Text(type));
+                  }).toList(),
+                  onChanged: (String? newType){
+                    selectedReportType = newType.toString();
+                  }),
+              SizedBox(height: 12.0),
+              Text(
+                'Время начала отчета',
+                style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 8.0),
-              TextFormField(
-                controller: endMomentController,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: 'Время окончания отчета: ',
-                ),
+              SizedBox(height: 4.0),
+              ElevatedButton(
+                child: Text(
+                    '${selectedBeginDateTime.year}'
+                        '/${selectedBeginDateTime.month}'
+                        '/${selectedBeginDateTime.day}'
+                        ' $showingBeginHours'
+                        ':$showingBeginMinutes'),
+                onPressed: () async {
+                  await pickBeginDateTime();
+                },
+              ),
+              SizedBox(height: 12.0),
+              Text(
+                'Время окончания отчета',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 4.0),
+              ElevatedButton(
+                child: Text(
+                    '${selectedEndDateTime.year}'
+                        '/${selectedEndDateTime.month}'
+                        '/${selectedEndDateTime.day}'
+                        ' $showingEndHours'
+                        ':$showingEndMinutes'),
+                onPressed: () async {
+                  await pickEndDateTime();
+                },
               ),
             ],
             if(index == 4) ...[
@@ -160,4 +260,9 @@ class ReportPlaceholderWidget extends StatelessWidget {
       ),
     );
   }
+
+  String selectedReportType = 'None';
+
+  DateTime selectedBeginDateTime = DateTime.now();
+  DateTime selectedEndDateTime = DateTime.now();
 }

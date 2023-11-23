@@ -120,7 +120,7 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
           itemBuilder: (context, index) {
             final data = groupsList[index];
             return Card(
-              color: isColor ? Colors.red : Colors.teal,
+              color: isColor ? Colors.cyan : Colors.greenAccent,
               elevation: 15,
               child: InkWell(
                 onTap: () {

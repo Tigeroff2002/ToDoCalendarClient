@@ -63,10 +63,11 @@ class TaskPlaceholderWidget extends StatelessWidget {
       final body = jsonEncode(requestMap);
       final response = await http.post(url, headers: headers, body: body);
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = Response.fromJson(jsonData);
+      if (response.statusCode == 200) {
 
-      if (responseContent.result) {
+        var jsonData = jsonDecode(response.body);
+        var responseContent = Response.fromJson(jsonData);
+
         if (responseContent.outInfo != null) {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -102,6 +103,10 @@ class TaskPlaceholderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var taskTypes = ['None', 'AbstractGoal', 'MeetingPresense', 'JobComplete'];
+    var taskStatuses = ['None', 'ToDo', 'InProgress', 'Review', 'Done'];
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -130,14 +135,14 @@ class TaskPlaceholderWidget extends StatelessWidget {
               ),
             ],
             if(index == 3) ...[
-              SizedBox(height: 8.0),
+              SizedBox(height: 12.0),
               TextField(
                 controller: taskCaptionController,
                 decoration: InputDecoration(
                   labelText: 'Наименование задачи: ',
                 ),
               ),
-              SizedBox(height: 8.0),
+              SizedBox(height: 12.0),
               TextFormField(
                 controller: taskDescriptionController,
                 maxLines: null,
@@ -145,20 +150,36 @@ class TaskPlaceholderWidget extends StatelessWidget {
                   labelText: 'Описание задачи: ',
                 ),
               ),
-              SizedBox(height: 8.0),
-              TextField(
-                controller: taskTypeController,
-                decoration: InputDecoration(
-                  labelText: 'Тип задачи: ',
-                ),
+              SizedBox(height: 12.0),
+              Text(
+                'Тип задачи',
+                style: TextStyle(fontSize: 20),
               ),
-              SizedBox(height: 8.0),
-              TextField(
-                controller: taskStatusController,
-                decoration: InputDecoration(
-                  labelText: 'Текущий статус задачи: ',
-                ),
+              SizedBox(height: 4.0),
+              DropdownButton(
+                  items: taskTypes.map((String type){
+                    return DropdownMenuItem(
+                        value: type,
+                        child: Text(type));
+                  }).toList(),
+                  onChanged: (String? newType){
+                    selectedTaskType = newType.toString();
+                  }),
+              SizedBox(height: 12.0),
+              Text(
+                'Статус задачи',
+                style: TextStyle(fontSize: 20),
               ),
+              SizedBox(height: 4.0),
+              DropdownButton(
+                  items: taskStatuses.map((String status){
+                    return DropdownMenuItem(
+                        value: status,
+                        child: Text(status));
+                  }).toList(),
+                  onChanged: (String? newStatus){
+                    selectedTaskStatus = newStatus.toString();
+                  }),
             ],
             if(index == 3) ...[
               SizedBox(height: 16.0),
@@ -173,4 +194,7 @@ class TaskPlaceholderWidget extends StatelessWidget {
       ),
     );
   }
+
+  String selectedTaskType = 'None';
+  String selectedTaskStatus = 'None';
 }

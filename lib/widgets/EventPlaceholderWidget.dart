@@ -87,9 +87,10 @@ class EventPlaceholderWidget extends StatelessWidget {
       final body = jsonEncode(requestMap);
       final response = await http.post(url, headers: headers, body: body);
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = Response.fromJson(jsonData);
-      if (responseContent.result){
+      if (response.statusCode == 200){
+
+        var jsonData = jsonDecode(response.body);
+        var responseContent = Response.fromJson(jsonData);
         if (responseContent.outInfo != null){
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -271,7 +272,7 @@ class EventPlaceholderWidget extends StatelessWidget {
               ),
             ],
             if(index == 1) ...[
-              SizedBox(height: 8.0),
+              SizedBox(height: 16.0),
               TextField(
                 controller: eventCaptionController,
                 decoration: InputDecoration(

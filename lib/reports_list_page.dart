@@ -122,7 +122,7 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
           itemBuilder: (context, index) {
             final data = reportsList[index];
             return Card(
-              color: isColor ? Colors.red : Colors.teal,
+              color: isColor ? Colors.cyan : Colors.greenAccent,
               elevation: 15,
               child: InkWell(
                 onTap: () {

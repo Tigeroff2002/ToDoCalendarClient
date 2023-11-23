@@ -1,3 +1,6 @@
+import 'dart:html';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/models/requests/UserLoginModel.dart';
@@ -9,8 +12,6 @@ import 'dart:convert';
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  bool isAlerted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -73,27 +74,30 @@ class LoginPage extends StatelessWidget {
 
     final response = await http.post(url, headers: headers, body: body);
 
-    var jsonData = jsonDecode(response.body);
-    var responseContent = ResponseWithToken.fromJson(jsonData);
+    if (response.statusCode == 200) {
 
-    MySharedPreferences mySharedPreferences = new MySharedPreferences();
+      var jsonData = jsonDecode(response.body);
+      var responseContent = ResponseWithToken.fromJson(jsonData);
 
-    await mySharedPreferences.clearData();
+      MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-    await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+      await mySharedPreferences.clearData();
 
-    if (responseContent.result) {
+      await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context)
           => UserPage()),
       );
+      emailController.clear();
+      passwordController.clear();
+
     } else {
-      showDialog(
+      showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Ошибка!'),
-          content: Text('Неверный логин или пароль!'),
+          content: Text('Неверная почта или пароль!'),
           actions: [
             TextButton(
               onPressed: () {
@@ -106,43 +110,6 @@ class LoginPage extends StatelessWidget {
       );
     }
 
-    emailController.clear();
     passwordController.clear();
-  }
-
-  showAppDialog(BuildContext context) {
-    print("Showing app dialog");
-    showDialog(context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text(
-              "This is a dialog that works.",
-            ),
-            icon: const Icon(Icons.delete),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          );
-        });
-  }
-
-  Widget showAlertDialog(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(body: SafeArea(child: Builder(
-          builder: (context) {
-            return TextButton(child: Text("Show dialog"), onPressed: () => showAppDialog(context),);
-          }
-      ))),
-    );
   }
 }

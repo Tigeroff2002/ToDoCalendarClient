@@ -57,10 +57,11 @@ class GroupPlaceholderWidget extends StatelessWidget {
       final body = jsonEncode(requestMap);
       final response = await http.post(url, headers: headers, body: body);
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = Response.fromJson(jsonData);
+      if (response.statusCode == 200) {
 
-      if (responseContent.result) {
+        var jsonData = jsonDecode(response.body);
+        var responseContent = Response.fromJson(jsonData);
+
         if (responseContent.outInfo != null) {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -94,6 +95,9 @@ class GroupPlaceholderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final groupTypes = ['None', 'Educational', 'Job'];
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -129,14 +133,21 @@ class GroupPlaceholderWidget extends StatelessWidget {
                   labelText: 'Наименование группы:',
                 ),
               ),
-              SizedBox(height: 8.0),
-              TextFormField(
-                controller: groupTypeController,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: 'Тип группы:',
-                ),
+              SizedBox(height: 12.0),
+              Text(
+                'Тип группы:',
+                style: TextStyle(fontSize: 20),
               ),
+              SizedBox(height: 4.0),
+              DropdownButton(
+                  items: groupTypes.map((String type){
+                    return DropdownMenuItem(
+                        value: type,
+                        child: Text(type));
+                  }).toList(),
+                  onChanged: (String? newType){
+                    selectedGroupType = newType.toString();
+                  }),
             ],
             if(index == 2) ...[
               SizedBox(height: 16.0),
@@ -151,4 +162,6 @@ class GroupPlaceholderWidget extends StatelessWidget {
       ),
     );
   }
+
+  String selectedGroupType = "None";
 }
