@@ -1,25 +1,18 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:todo_calendar_client/EnumAliaser.dart';
 import 'package:todo_calendar_client/models/EventAppointment.dart';
 import 'package:todo_calendar_client/models/MeetingDataSource.dart';
-import 'package:todo_calendar_client/models/enums/DecisionType.dart';
-import 'package:todo_calendar_client/models/enums/EventType.dart';
-import 'package:todo_calendar_client/models/enums/GroupType.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/EventInfoResponse.dart';
-import 'package:todo_calendar_client/models/responses/GroupInfoResponse.dart';
-import 'package:todo_calendar_client/models/responses/ReportInfoResponse.dart';
-import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart';
-import 'package:todo_calendar_client/models/responses/TaskInfoResponse.dart';
-import 'package:todo_calendar_client/models/responses/UserInfoWithDecisionResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
-
-import 'models/enums/EventStatus.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
 class EventsListPageWidget extends StatefulWidget {
@@ -31,12 +24,12 @@ class EventsListPageWidget extends StatefulWidget {
 class EventsListPageState extends State<EventsListPageWidget> {
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
     getUserInfo();
   }
 
-  final uri = 'http://localhost:5201/users/get_info';
+  final uri = 'http://127.0.0.1:5201/users/get_info';
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
 
@@ -63,25 +56,39 @@ class EventsListPageState extends State<EventsListPageWidget> {
       var url = Uri.parse(uri);
       final body = jsonEncode(requestMap);
 
-      final response = await http.post(url, headers: headers, body: body);
+      try {
+        final response = await http.post(url, headers: headers, body: body);
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = GetResponse.fromJson(jsonData);
+        var jsonData = jsonDecode(response.body);
+        var responseContent = GetResponse.fromJson(jsonData);
 
-      if (responseContent.result) {
-        var userRequestedInfo = responseContent.requestedInfo.toString();
+        if (responseContent.result) {
+          var userRequestedInfo = responseContent.requestedInfo.toString();
 
-        var data = jsonDecode(userRequestedInfo);
-        var userEvents = data['user_events'];
+          var data = jsonDecode(userRequestedInfo);
+          var userEvents = data['user_events'];
 
-        var fetchedEvents =
+          var fetchedEvents =
           List<EventInfoResponse>
               .from(userEvents.map(
                   (data) => EventInfoResponse.fromJson(data)));
 
-        setState(() {
-          eventsList = fetchedEvents;
-        });
+          setState(() {
+            eventsList = fetchedEvents;
+          });
+        }
+      }
+      catch (e) {
+        if (e is SocketException) {
+          //treat SocketException
+          print("Socket exception: ${e.toString()}");
+        }
+        else if (e is TimeoutException) {
+          //treat TimeoutException
+          print("Timeout exception: ${e.toString()}");
+        }
+        else
+          print("Unhandled exception: ${e.toString()}");
       }
     }
     else {

@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:todo_calendar_client/models/requests/UserRegisterModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
 import 'dart:convert';
@@ -96,7 +100,7 @@ class RegisterPageState extends State<RegisterPage> {
                   minimumSize: Size(150, 60),
                 ),
               onPressed: () {
-                setState(() {
+                setState(() async {
                   isEmailValidated = !emailController.text.isEmpty;
                   isNameValidated = !usernameController.text.isEmpty;
                   isPasswordValidated = !passwordController.text.isEmpty;
@@ -104,7 +108,7 @@ class RegisterPageState extends State<RegisterPage> {
 
                   if (isEmailValidated && isPasswordValidated
                         && isNameValidated && isPhoneValidated){
-                    register(context);
+                    await register(context);
                   }
                 });
               },
@@ -130,58 +134,72 @@ class RegisterPageState extends State<RegisterPage> {
 
     var requestMap = model.toJson();
 
-    final url = Uri.parse('http://localhost:5201/users/register');
+    final url = Uri.parse('http://127.0.0.1:5201/users/register');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode(requestMap);
 
-    final response = await http.post(url, headers: headers, body: body);
+    try {
+      final response = await http.post(url ,headers: headers, body : body);
 
-    if (response.statusCode == 200)
-    {
-      var jsonData = jsonDecode(response.body);
+      if (response.statusCode == 200)
+      {
+        var jsonData = jsonDecode(response.body);
 
-      var responseContent = ResponseWithToken.fromJson(jsonData);
+        var responseContent = ResponseWithToken.fromJson(jsonData);
 
-      MySharedPreferences mySharedPreferences = new MySharedPreferences();
+        MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-      await mySharedPreferences.clearData();
+        await mySharedPreferences.clearData();
 
-      await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+        await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(responseContent.outInfo.toString()),
-        ),
-      );
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(responseContent.outInfo.toString()),
+          ),
+        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context)
                 => UserPage()));
 
-      usernameController.clear();
-      emailController.clear();
-      passwordController.clear();
-      phoneNumberController.clear();
-    }
-    else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Ошибка!'),
-          content: Text('Регистрация не удалась!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+        usernameController.clear();
+        emailController.clear();
+        passwordController.clear();
+        phoneNumberController.clear();
+      }
+      else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Ошибка!'),
+            content: Text('Регистрация не удалась!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
 
-      passwordController.clear();
+        passwordController.clear();
+      }
+    }
+    catch (e) {
+      if (e is SocketException) {
+        //treat SocketException
+        print("Socket exception: ${e.toString()}");
+      }
+      else if (e is TimeoutException) {
+        //treat TimeoutException
+        print("Timeout exception: ${e.toString()}");
+      }
+      else
+        print("Unhandled exception: ${e.toString()}");
     }
   }
 }

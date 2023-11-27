@@ -30,7 +30,7 @@ class _AdditionalPageState extends State<AdditionalPageWidget> {
         body: Scaffold(
           body: Center(
             child: GestureDetector(
-              onTap: changeURLByClick,
+              onTap: changeURLByTimer,
               child: Image.network(pictureUrl),
             ),
           ),
@@ -45,8 +45,8 @@ class _AdditionalPageState extends State<AdditionalPageWidget> {
     });
   }
 
-  void changeURLByTimer() {
-    Timer.periodic(Duration(seconds: 3), (timer) {
+  Future<void> changeURLByTimer() async {
+    await Timer.periodic(Duration(seconds: 3), (timer) {
       setState(() {
         pictureUrl = "https://source.unsplash.com/random/800x600/?" +
             "q=${new DateTime.now().millisecondsSinceEpoch}";

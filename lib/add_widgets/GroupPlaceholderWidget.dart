@@ -1,11 +1,10 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:todo_calendar_client/user_info_map.dart';
 import 'dart:convert';
-import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/models/requests/AddNewGroupModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
-
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 import '../shared_pref_cached_data.dart';
 
@@ -67,26 +66,41 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://localhost:5201/groups/create');
+      final url = Uri.parse('http://127.0.0.1:5201/groups/create');
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
-      final response = await http.post(url, headers: headers, body: body);
 
-      if (response.statusCode == 200) {
+      try {
+        final response = await http.post(url, headers: headers, body: body);
 
-        var jsonData = jsonDecode(response.body);
-        var responseContent = Response.fromJson(jsonData);
+        if (response.statusCode == 200) {
 
-        if (responseContent.outInfo != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(responseContent.outInfo.toString())
-              )
-          );
+          var jsonData = jsonDecode(response.body);
+          var responseContent = Response.fromJson(jsonData);
+
+          if (responseContent.outInfo != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(responseContent.outInfo.toString())
+                )
+            );
+          }
         }
-      }
 
-      groupNameController.clear();
+        groupNameController.clear();
+      }
+      catch (e) {
+        if (e is SocketException) {
+          //treat SocketException
+          print("Socket exception: ${e.toString()}");
+        }
+        else if (e is TimeoutException) {
+          //treat TimeoutException
+          print("Timeout exception: ${e.toString()}");
+        }
+        else
+          print("Unhandled exception: ${e.toString()}");
+      }
     }
     else {
       showDialog(
@@ -155,12 +169,14 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
             if(index == 2) ...[
               SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () {
-                  isNameValidated = !groupNameController.text.isEmpty;
+                onPressed: () async {
+                  setState(() async {
+                    isNameValidated = !groupNameController.text.isEmpty;
 
-                  if (isNameValidated){
-                    addNewGroup(context);
-                  }
+                    if (isNameValidated){
+                      await addNewGroup(context);
+                    }
+                  });
                 },
                 child: Text('Создать новую группу'),
               ),

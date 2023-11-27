@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -71,13 +73,13 @@ class LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(36.0)),
                 minimumSize: Size(150, 60),
               ),
-              onPressed: () {
-                setState(() {
+              onPressed: () async {
+                setState(() async {
                   isEmailValidated = !emailController.text.isEmpty;
                   isPasswordValidated = !passwordController.text.isEmpty;
 
                   if (isEmailValidated && isPasswordValidated){
-                    login(context);
+                    await login(context);
                   }
                 });
               },
@@ -97,48 +99,62 @@ class LoginPageState extends State<LoginPage> {
 
     var requestMap = model.toJson();
 
-    final url = Uri.parse('http://localhost:5201/users/login');
+    final url = Uri.parse('http://127.0.0.1:5201/users/login');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode(requestMap);
 
-    final response = await http.post(url, headers: headers, body: body);
+    try {
+      final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = ResponseWithToken.fromJson(jsonData);
+        var jsonData = jsonDecode(response.body);
+        var responseContent = ResponseWithToken.fromJson(jsonData);
 
-      MySharedPreferences mySharedPreferences = new MySharedPreferences();
+        MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-      await mySharedPreferences.clearData();
+        await mySharedPreferences.clearData();
 
-      await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context)
+        await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context)
           => UserPage()),
-      );
-      emailController.clear();
+        );
+        emailController.clear();
+        passwordController.clear();
+
+      } else {
+        showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Ошибка!'),
+            content: Text('Неверная почта или пароль!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
       passwordController.clear();
-
-    } else {
-      showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Ошибка!'),
-          content: Text('Неверная почта или пароль!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
     }
-
-    passwordController.clear();
+    catch (e) {
+      if (e is SocketException) {
+        //treat SocketException
+        print("Socket exception: ${e.toString()}");
+      }
+      else if (e is TimeoutException) {
+        //treat TimeoutException
+        print("Timeout exception: ${e.toString()}");
+      }
+      else
+        print("Unhandled exception: ${e.toString()}");
+    }
   }
 }

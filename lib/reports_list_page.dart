@@ -1,18 +1,14 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
-import 'package:todo_calendar_client/models/enums/ReportType.dart';
-import 'package:todo_calendar_client/models/enums/TaskCurrentStatus.dart';
-import 'package:todo_calendar_client/models/enums/TaskType.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
-import 'package:todo_calendar_client/models/responses/ReportDescriptionResult.dart';
 import 'dart:convert';
-import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 import 'models/responses/ReportInfoResponse.dart';
-import 'models/responses/TaskInfoResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
 class ReportsListPageWidget extends StatefulWidget {
@@ -24,12 +20,12 @@ class ReportsListPageWidget extends StatefulWidget {
 class ReportsListPageState extends State<ReportsListPageWidget> {
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
-    getUserInfo();
+    await getUserInfo();
   }
 
-  final uri = 'http://localhost:5201/users/get_info';
+  final uri = 'http://127.0.0.1:5201/users/get_info';
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
 
@@ -56,25 +52,39 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
       var url = Uri.parse(uri);
       final body = jsonEncode(requestMap);
 
-      final response = await http.post(url, headers: headers, body: body);
+      try {
+        final response = await http.post(url, headers: headers, body: body);
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = GetResponse.fromJson(jsonData);
+        var jsonData = jsonDecode(response.body);
+        var responseContent = GetResponse.fromJson(jsonData);
 
-      if (responseContent.result) {
-        var userRequestedInfo = responseContent.requestedInfo.toString();
+        if (responseContent.result) {
+          var userRequestedInfo = responseContent.requestedInfo.toString();
 
-        var data = jsonDecode(userRequestedInfo);
-        var userReports = data['user_reports'];
+          var data = jsonDecode(userRequestedInfo);
+          var userReports = data['user_reports'];
 
-        var fetchedReports =
+          var fetchedReports =
           List<ReportInfoResponse>
-            .from(userReports.map(
-                (data) => ReportInfoResponse.fromJson(data)));
+              .from(userReports.map(
+                  (data) => ReportInfoResponse.fromJson(data)));
 
-        setState(() {
-          reportsList = fetchedReports;
-        });
+          setState(() {
+            reportsList = fetchedReports;
+          });
+        }
+      }
+      catch (e) {
+        if (e is SocketException) {
+          //treat SocketException
+          print("Socket exception: ${e.toString()}");
+        }
+        else if (e is TimeoutException) {
+          //treat TimeoutException
+          print("Timeout exception: ${e.toString()}");
+        }
+        else
+          print("Unhandled exception: ${e.toString()}");
       }
     }
     else {

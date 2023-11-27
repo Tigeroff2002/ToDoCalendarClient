@@ -1,11 +1,10 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
-import 'package:todo_calendar_client/models/enums/TaskCurrentStatus.dart';
-import 'package:todo_calendar_client/models/enums/TaskType.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
-import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
@@ -21,12 +20,12 @@ class TasksListPageWidget extends StatefulWidget {
 class TasksListPageState extends State<TasksListPageWidget> {
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
-    getUserInfo();
+    await getUserInfo();
   }
 
-  final uri = 'http://localhost:5201/users/get_info';
+  final uri = 'http://127.0.0.1:5201/users/get_info';
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
 
@@ -35,12 +34,11 @@ class TasksListPageState extends State<TasksListPageWidget> {
   List<TaskInfoResponse> tasksList = [];
 
   Future<void> getUserInfo() async {
-
     MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
     var cachedData = await mySharedPreferences.getDataIfNotExpired();
 
-    if (cachedData != null){
+    if (cachedData != null) {
       var json = jsonDecode(cachedData.toString());
       var cacheContent = ResponseWithToken.fromJson(json);
 
@@ -53,50 +51,65 @@ class TasksListPageState extends State<TasksListPageWidget> {
       var url = Uri.parse(uri);
       final body = jsonEncode(requestMap);
 
-      final response = await http.post(url, headers: headers, body: body);
+      try {
+        final response = await http.post(url, headers: headers, body: body);
 
-      var jsonData = jsonDecode(response.body);
-      var responseContent = GetResponse.fromJson(jsonData);
+        var jsonData = jsonDecode(response.body);
+        var responseContent = GetResponse.fromJson(jsonData);
 
-      if (responseContent.result) {
-        var userRequestedInfo = responseContent.requestedInfo.toString();
+        if (responseContent.result) {
+          var userRequestedInfo = responseContent.requestedInfo.toString();
 
-        var data = jsonDecode(userRequestedInfo);
-        var userTasks = data['user_tasks'];
+          var data = jsonDecode(userRequestedInfo);
+          var userTasks = data['user_tasks'];
 
-        var fetchedTasks =
+          var fetchedTasks =
           List<TaskInfoResponse>
-            .from(userTasks.map(
-                (data) => TaskInfoResponse.fromJson(data)));
+              .from(userTasks.map(
+                  (data) => TaskInfoResponse.fromJson(data)));
 
-        setState(() {
-          tasksList = fetchedTasks;
-        });
+          setState(() {
+            tasksList = fetchedTasks;
+          });
+        }
+      }
+      catch (e) {
+        if (e is SocketException) {
+          //treat SocketException
+          print("Socket exception: ${e.toString()}");
+        }
+        else if (e is TimeoutException) {
+          //treat TimeoutException
+          print("Timeout exception: ${e.toString()}");
+        }
+        else
+          print("Unhandled exception: ${e.toString()}");
       }
     }
     else {
-      setState(() {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Ошибка!'),
-            content:
-            Text(
-                'Произошла ошибка при получении'
-                    ' полной информации о пользователе!'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      });
-    }
-  }
+          setState(() {
+            showDialog(
+              context: context,
+              builder: (context) =>
+                  AlertDialog(
+                    title: Text('Ошибка!'),
+                    content:
+                    Text(
+                        'Произошла ошибка при получении'
+                            ' полной информации о пользователе!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  ),
+            );
+          });
+        }
+      }
 
   @override
   Widget build(BuildContext context) {

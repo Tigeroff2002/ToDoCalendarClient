@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:todo_calendar_client/add_widgets/EventPlaceholderWidget.dart';
 import 'package:todo_calendar_client/add_widgets/GroupPlaceholderWidget.dart';

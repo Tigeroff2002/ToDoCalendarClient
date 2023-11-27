@@ -1,16 +1,11 @@
-import 'dart:html';
-
-import 'package:intl/intl.dart';
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:todo_calendar_client/additional_page.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
-import 'package:todo_calendar_client/user_info_map.dart';
 import 'dart:convert';
-import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/models/requests/AddNewEventModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
-
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 
 class EventPlaceholderWidget extends StatefulWidget{
@@ -91,8 +86,6 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
         + ':' + minutes.toString().padLeft(2, '0')
         + ':' + seconds.toString().padLeft(2, '0');
 
-    print(duration);
-
     var guestIds = [2];
 
     MySharedPreferences mySharedPreferences = new MySharedPreferences();
@@ -120,26 +113,41 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://localhost:5201/events/schedule_new');
+      final url = Uri.parse('http://127.0.0.1:5201/events/schedule_new');
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
-      final response = await http.post(url, headers: headers, body: body);
 
-      if (response.statusCode == 200){
+      try {
+        final response = await http.post(url, headers: headers, body: body);
 
-        var jsonData = jsonDecode(response.body);
-        var responseContent = Response.fromJson(jsonData);
-        if (responseContent.outInfo != null){
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(responseContent.outInfo.toString())
-              )
-          );
+        if (response.statusCode == 200){
+
+          var jsonData = jsonDecode(response.body);
+          var responseContent = Response.fromJson(jsonData);
+          if (responseContent.outInfo != null){
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(responseContent.outInfo.toString())
+                )
+            );
+          }
         }
-      }
 
-      eventCaptionController.clear();
-      eventDescriptionController.clear();
+        eventCaptionController.clear();
+        eventDescriptionController.clear();
+      }
+      catch (e) {
+        if (e is SocketException) {
+          //treat SocketException
+          print("Socket exception: ${e.toString()}");
+        }
+        else if (e is TimeoutException) {
+          //treat TimeoutException
+          print("Timeout exception: ${e.toString()}");
+        }
+        else
+          print("Unhandled exception: ${e.toString()}");
+      }
     }
     else {
       showDialog(
@@ -425,8 +433,8 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                       borderRadius: BorderRadius.circular(20.0)),
                   minimumSize: Size(150, 50),
                 ),
-                onPressed: () {
-                  setState(() {
+                onPressed: () async{
+                  setState(() async {
                     isCaptionValidated = !eventCaptionController.text.isEmpty;
                     isDescriptionValidated = !eventDescriptionController.text.isEmpty;
 
@@ -438,7 +446,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
 
                     if (isCaptionValidated && isDescriptionValidated
                         && isEventDurationValidated && isEventEndTimeGreaterThanBeginTime){
-                      addNewEvent(context);
+                      await addNewEvent(context);
                     }
                   });
                 },
