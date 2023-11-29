@@ -86,7 +86,7 @@ class PersonalAccountState extends State<PersonalAccount>{
                     MaterialPageRoute(
                         builder: (context) => AdditionalPageWidget()),);
                 },
-                child: Text('Страничка с картинками'),
+                child: Text('Дополнительная информация'),
               ),
               SizedBox(height: 30.0),
               ElevatedButton(

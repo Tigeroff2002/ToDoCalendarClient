@@ -20,9 +20,9 @@ class TasksListPageWidget extends StatefulWidget {
 class TasksListPageState extends State<TasksListPageWidget> {
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    await getUserInfo();
+    getUserInfo();
   }
 
   final uri = 'http://127.0.0.1:5201/users/get_info';

@@ -24,7 +24,7 @@ class EventsListPageWidget extends StatefulWidget {
 class EventsListPageState extends State<EventsListPageWidget> {
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
     getUserInfo();
   }
@@ -155,14 +155,18 @@ class EventsListPageState extends State<EventsListPageWidget> {
           ),
         ),
         body: SfCalendar(
-          view: CalendarView.timelineDay,
+          view: CalendarView.week,
           firstDayOfWeek: 1,
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
           dataSource: MeetingDataSource(getAppointments(eventsList)),
         ),
       ),
-      /*
+    );
+  }
+}
+
+/* legacy code
       home: Scaffold(
         appBar: AppBar(
           title: Text('Список мероприятий'),
@@ -289,6 +293,3 @@ class EventsListPageState extends State<EventsListPageWidget> {
         ),
       ),
        */
-    );
-  }
-}

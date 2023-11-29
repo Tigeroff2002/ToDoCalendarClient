@@ -20,7 +20,7 @@ class GroupsListPageWidget extends StatefulWidget {
 class GroupsListPageState extends State<GroupsListPageWidget> {
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
     getUserInfo();
   }

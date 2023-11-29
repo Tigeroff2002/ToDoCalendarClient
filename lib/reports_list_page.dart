@@ -20,9 +20,9 @@ class ReportsListPageWidget extends StatefulWidget {
 class ReportsListPageState extends State<ReportsListPageWidget> {
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    await getUserInfo();
+    getUserInfo();
   }
 
   final uri = 'http://127.0.0.1:5201/users/get_info';
