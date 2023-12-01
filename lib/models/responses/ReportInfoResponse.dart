@@ -1,28 +1,26 @@
-import 'dart:convert';
-
-import 'package:todo_calendar_client/models/enums/ReportType.dart';
-import 'package:todo_calendar_client/models/responses/ReportDescriptionResult.dart';
-
 class ReportInfoResponse {
 
-  final String reportType;
+  final String creationTime;
   final String beginMoment;
   final String endMoment;
-  //final ReportDescriptionResult reportContent;
+  final String reportType;
+  final String content;
 
   ReportInfoResponse({
     required this.reportType,
+    required this.creationTime,
     required this.beginMoment,
     required this.endMoment,
-    //required this.reportContent
+    required this.content
   });
 
   factory ReportInfoResponse.fromJson(Map <String, dynamic> json) {
     return ReportInfoResponse(
+        creationTime: json['creation_time'],
         beginMoment: json['begin_moment'],
         endMoment: json['end_moment'],
         reportType: json['report_type'],
-        //reportContent: json['report_content']
+        content: json['content']
     );
   }
 }

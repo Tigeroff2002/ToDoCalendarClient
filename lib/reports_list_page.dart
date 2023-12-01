@@ -156,6 +156,62 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
                             aliaser.getReportTypeEnumValue(data.reportType)),
                         style: TextStyle(
                           color: Colors.white,
+                        )
+                      ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'Время создания отчета: ',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          utf8.decode(data.creationTime.codeUnits),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                      Text(
+                        'Время, взятое для начала отчета: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        utf8.decode(data.beginMoment.codeUnits),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      Text(
+                        'Время, взятое для окончания отчета: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        utf8.decode(data.endMoment.codeUnits),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 12.0),
+                      Text(
+                        'Информация отчета: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        utf8.decode(data.beginMoment.codeUnits),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
