@@ -3,38 +3,50 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
+import 'package:todo_calendar_client/models/requests/GroupInfoRequest.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/GroupInfoResponse.dart';
+import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
+import 'package:todo_calendar_client/models/responses/additional_responces/GroupRequestedInfo.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
-import 'package:todo_calendar_client/users_from_group_list_page.dart';
+import 'models/responses/additional_responces/GroupGetResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
-class GroupsListPageWidget extends StatefulWidget {
+class UsersFromGroupListPageWidget extends StatefulWidget {
+
+  final int groupId;
+
+  UsersFromGroupListPageWidget({required this.groupId});
 
   @override
-  GroupsListPageState createState() => GroupsListPageState();
+  UsersFromGroupListPageState createState() =>
+      new UsersFromGroupListPageState(groupId: groupId);
 }
 
-class GroupsListPageState extends State<GroupsListPageWidget> {
+class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
+
+  final int groupId;
 
   @override
   void initState() {
     super.initState();
-    getUserInfo();
+    getUsersFromGroupInfo();
   }
 
-  final uri = 'http://127.0.0.1:5201/users/get_info';
+  UsersFromGroupListPageState({required this.groupId});
+
+  final uri = 'http://127.0.0.1:5201/groups/get_group_info';
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
 
   final EnumAliaser aliaser = new EnumAliaser();
 
-  List<GroupInfoResponse> groupsList = [];
+  List<ShortUserInfoResponse> usersList = [];
 
-  Future<void> getUserInfo() async {
+  Future<void> getUsersFromGroupInfo() async {
 
     MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
@@ -47,7 +59,95 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
       var userId = cacheContent.userId;
       var token = cacheContent.token.toString();
 
-      var model = new UserInfoRequestModel(userId: userId, token: token);
+      var model = new GroupInfoRequest(userId: userId, token: token, groupId: groupId);
+      var requestMap = model.toJson();
+
+      var url = Uri.parse(uri);
+      final body = jsonEncode(requestMap);
+
+      try {
+        final response = await http.post(url, headers: headers, body: body);
+
+        var jsonData = jsonDecode(response.body);
+        var responseContent = GetResponse.fromJson(jsonData);
+
+        if (responseContent.result) {
+          var userRequestedInfo = responseContent.requestedInfo.toString();
+          
+          var rawBeginIndex = userRequestedInfo.indexOf('"participants"');
+          var rawEndIndex = userRequestedInfo.indexOf(']}') + 2;
+
+          var string = '{' + userRequestedInfo.substring(rawBeginIndex, rawEndIndex);
+          print(string);
+
+          var contentData = jsonDecode(string);
+          print(contentData);
+
+          var userParticipants = contentData['participants'];
+
+          var fetchedGroupUsers =
+          List<ShortUserInfoResponse>
+              .from(userParticipants.map(
+                  (data) => ShortUserInfoResponse.fromJson(data)));
+
+          setState(() {
+            usersList = fetchedGroupUsers;
+          });
+        }
+      }
+      catch (e) {
+        if (e is SocketException) {
+          //treat SocketException
+          print("Socket exception: ${e.toString()}");
+        }
+        else if (e is TimeoutException) {
+          //treat TimeoutException
+          print("Timeout exception: ${e.toString()}");
+        }
+        else
+          print("Unhandled exception: ${e.toString()}");
+      }
+    }
+    else {
+      setState(() {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Ошибка!'),
+            content:
+            Text(
+                'Произошла ошибка при получении'
+                    ' полной информации о пользователе!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
+
+  Future<void> getGroupUserCalendar() async {
+
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+    var cachedData = await mySharedPreferences.getDataIfNotExpired();
+
+    if (cachedData != null){
+      var json = jsonDecode(cachedData.toString());
+      var cacheContent = ResponseWithToken.fromJson(json);
+
+      var userId = cacheContent.userId;
+      var token = cacheContent.token.toString();
+
+      var groupId = 10;
+
+      var model = new GroupInfoRequest(userId: userId, token: token, groupId: groupId);
       var requestMap = model.toJson();
 
       var url = Uri.parse(uri);
@@ -63,15 +163,15 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
           var userRequestedInfo = responseContent.requestedInfo.toString();
 
           var data = jsonDecode(userRequestedInfo);
-          var userGroups = data['user_groups'];
+          var userParticipants = data['participants'];
 
-          var fetchedGroups =
-          List<GroupInfoResponse>
-              .from(userGroups.map(
-                  (data) => GroupInfoResponse.fromJson(data)));
+          var fetchedGroupUsers =
+          List<ShortUserInfoResponse>
+              .from(userParticipants.map(
+                  (data) => ShortUserInfoResponse.fromJson(data)));
 
           setState(() {
-            groupsList = fetchedGroups;
+            usersList = fetchedGroupUsers;
           });
         }
       }
@@ -117,7 +217,7 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Список групп'),
+          title: Text('Список пользователей группы'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -129,9 +229,9 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
           ),
         ),
         body: ListView.builder(
-          itemCount: groupsList.length,
+          itemCount: usersList.length,
           itemBuilder: (context, index) {
-            final data = groupsList[index];
+            final data = usersList[index];
             return Card(
               color: isColor ? Colors.cyan : Colors.greenAccent,
               elevation: 15,
@@ -147,13 +247,13 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Название группы: ',
+                        'Электронная почта: ',
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       Text(
-                        utf8.decode(data.groupName.codeUnits),
+                        utf8.decode(data.userEmail.codeUnits),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -161,26 +261,23 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Тип группы: ',
+                        'Имя пользователя: ',
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       Text(
-                        aliaser.GetAlias(aliaser.getGroupEnumValue(data.groupType)),
+                        utf8.decode(data.userName.codeUnits),
                         style: TextStyle(
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      SizedBox(height: 12),
                       ElevatedButton(
-                        child: Text('Список пользователей'),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context)
-                            => UsersFromGroupListPageWidget(groupId: data.groupId)),
-                          );
+                        child: Text('Посмотреть календарь'),
+                        onPressed: () async {
+
                         },
                       ),
                     ],

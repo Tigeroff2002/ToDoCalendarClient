@@ -8,12 +8,14 @@ class UserInfoWithDecisionResponse extends ShortUserInfoResponse{
   final DecisionType decisionType;
 
   UserInfoWithDecisionResponse({
+    required int userId,
     required String userName,
     required String userEmail,
     required String phoneNumber,
     required this.decisionType
   })
     : super(
+      userId: userId,
       userName: userName,
       userEmail: userEmail,
       phoneNumber: phoneNumber
@@ -21,6 +23,7 @@ class UserInfoWithDecisionResponse extends ShortUserInfoResponse{
 
   factory UserInfoWithDecisionResponse.fromJson(Map <String, dynamic> json) {
     return UserInfoWithDecisionResponse(
+        userId: json['user_id'],
         userName: json['user_name'],
         userEmail: json['user_email'],
         phoneNumber: json['phone_number'],
