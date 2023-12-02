@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithTokenAndName.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_info_map.dart';
 
@@ -25,7 +28,8 @@ class PersonalAccount extends StatefulWidget{
   }
 }
 
-class PersonalAccountState extends State<PersonalAccount>{
+
+class PersonalAccountState extends State<PersonalAccount> {
 
   final Color color;
   final String text;
@@ -39,7 +43,29 @@ class PersonalAccountState extends State<PersonalAccount>{
       });
 
   @override
+  void initState() {
+    super.initState();
+    getUserNameFromCache();
+  }
+
+  Future<void> getUserNameFromCache() async {
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+    var cachedData = await mySharedPreferences.getDataIfNotExpired();
+
+    if (cachedData != null) {
+      var json = jsonDecode(cachedData.toString());
+      var cacheContent = ResponseWithTokenAndName.fromJson(json);
+
+      setState(() {
+        currentUserName = cacheContent.userName.toString();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context){
+
     return Padding(
         padding: EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -47,7 +73,7 @@ class PersonalAccountState extends State<PersonalAccount>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                text,
+                text + " " + currentUserName,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 30.0),
@@ -114,4 +140,6 @@ class PersonalAccountState extends State<PersonalAccount>{
         )
     );
   }
+  
+  String currentUserName = "None user";
 }

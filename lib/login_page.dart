@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/models/requests/UserLoginModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
+import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithTokenAndName.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 import 'dart:convert';
@@ -109,12 +110,12 @@ class LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
 
         var jsonData = jsonDecode(response.body);
-        var responseContent = ResponseWithToken.fromJson(jsonData);
 
         MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
         await mySharedPreferences.clearData();
 
+        print(response.body);
         await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
         Navigator.pushReplacement(
           context,
