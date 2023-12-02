@@ -137,91 +137,94 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
 
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              text,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16.0),
-            if(index == 3) ...[
-              SizedBox(height: 12.0),
-              TextField(
-                controller: taskCaptionController,
-                decoration: InputDecoration(
-                  labelText: 'Наименование задачи: ',
-                    errorText: !isCaptionValidated
-                        ? 'Название задачи не может быть пустым'
-                        : null
+      child: SingleChildScrollView(
+          padding: EdgeInsets.all(32),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
-              ),
-              SizedBox(height: 12.0),
-              TextFormField(
-                controller: taskDescriptionController,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: 'Описание задачи: ',
-                    errorText: !isDescriptionValidated
-                        ? 'Описание мероприятия не может быть пустым'
-                        : null
-                ),
-              ),
-              SizedBox(height: 12.0),
-              Text(
-                'Тип задачи',
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(height: 4.0),
-              DropdownButton(
-                  value: selectedTaskType,
-                  items: taskTypes.map((String type){
-                    return DropdownMenuItem(
-                        value: type,
-                        child: Text(type));
-                  }).toList(),
-                  onChanged: (String? newType){
-                    setState(() {
-                      selectedTaskType = newType.toString();
-                    });
-                  }),
-              SizedBox(height: 12.0),
-              Text(
-                'Статус задачи',
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(height: 4.0),
-              DropdownButton(
-                  value: selectedTaskStatus,
-                  items: taskStatuses.map((String status){
-                    return DropdownMenuItem(
-                        value: status,
-                        child: Text(status));
-                  }).toList(),
-                  onChanged: (String? newStatus){
-                    setState(() {
-                      selectedTaskStatus = newStatus.toString();
-                    });
-                  }),
-            ],
-            if(index == 3) ...[
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    isCaptionValidated = !taskCaptionController.text.isEmpty;
-                    isDescriptionValidated = !taskDescriptionController.text.isEmpty;
+                SizedBox(height: 16.0),
+                if(index == 3) ...[
+                  SizedBox(height: 12.0),
+                  TextField(
+                    controller: taskCaptionController,
+                    decoration: InputDecoration(
+                        labelText: 'Наименование задачи: ',
+                        errorText: !isCaptionValidated
+                            ? 'Название задачи не может быть пустым'
+                            : null
+                    ),
+                  ),
+                  SizedBox(height: 12.0),
+                  TextFormField(
+                    controller: taskDescriptionController,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                        labelText: 'Описание задачи: ',
+                        errorText: !isDescriptionValidated
+                            ? 'Описание мероприятия не может быть пустым'
+                            : null
+                    ),
+                  ),
+                  SizedBox(height: 12.0),
+                  Text(
+                    'Тип задачи',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(height: 4.0),
+                  DropdownButton(
+                      value: selectedTaskType,
+                      items: taskTypes.map((String type){
+                        return DropdownMenuItem(
+                            value: type,
+                            child: Text(type));
+                      }).toList(),
+                      onChanged: (String? newType){
+                        setState(() {
+                          selectedTaskType = newType.toString();
+                        });
+                      }),
+                  SizedBox(height: 12.0),
+                  Text(
+                    'Статус задачи',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(height: 4.0),
+                  DropdownButton(
+                      value: selectedTaskStatus,
+                      items: taskStatuses.map((String status){
+                        return DropdownMenuItem(
+                            value: status,
+                            child: Text(status));
+                      }).toList(),
+                      onChanged: (String? newStatus){
+                        setState(() {
+                          selectedTaskStatus = newStatus.toString();
+                        });
+                      }),
+                ],
+                if(index == 3) ...[
+                  SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() {
+                        isCaptionValidated = !taskCaptionController.text.isEmpty;
+                        isDescriptionValidated = !taskDescriptionController.text.isEmpty;
 
-                    if (isCaptionValidated && isDescriptionValidated){
-                      addNewTask(context);
-                    }
-                  });
-                },
-                child: Text('Создать новую задачу'),
-              ),
-            ],
-          ]
-      ),
+                        if (isCaptionValidated && isDescriptionValidated){
+                          addNewTask(context);
+                        }
+                      });
+                    },
+                    child: Text('Создать новую задачу'),
+                  ),
+                ],
+              ]
+          ),
+      )
     );
   }
 

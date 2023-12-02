@@ -160,6 +160,7 @@ class EventsListPageState extends State<EventsListPageWidget> {
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
           dataSource: MeetingDataSource(getAppointments(eventsList)),
+          timeZone: 'Russian Standard Time',
         ),
       ),
     );
