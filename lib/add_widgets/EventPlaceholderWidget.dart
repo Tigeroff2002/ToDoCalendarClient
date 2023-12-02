@@ -433,8 +433,8 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                       borderRadius: BorderRadius.circular(20.0)),
                   minimumSize: Size(150, 50),
                 ),
-                onPressed: () async{
-                  setState(() async {
+                onPressed: () async {
+                  setState(() {
                     isCaptionValidated = !eventCaptionController.text.isEmpty;
                     isDescriptionValidated = !eventDescriptionController.text.isEmpty;
 
@@ -446,7 +446,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
 
                     if (isCaptionValidated && isDescriptionValidated
                         && isEventDurationValidated && isEventEndTimeGreaterThanBeginTime){
-                      await addNewEvent(context);
+                      addNewEvent(context);
                     }
                   });
                 },

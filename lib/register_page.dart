@@ -99,8 +99,8 @@ class RegisterPageState extends State<RegisterPage> {
                       borderRadius: BorderRadius.circular(36.0)),
                   minimumSize: Size(150, 60),
                 ),
-              onPressed: () {
-                setState(() async {
+              onPressed: () async {
+                setState(() {
                   isEmailValidated = !emailController.text.isEmpty;
                   isNameValidated = !usernameController.text.isEmpty;
                   isPasswordValidated = !passwordController.text.isEmpty;
@@ -108,7 +108,7 @@ class RegisterPageState extends State<RegisterPage> {
 
                   if (isEmailValidated && isPasswordValidated
                         && isNameValidated && isPhoneValidated){
-                    await register(context);
+                    register(context);
                   }
                 });
               },

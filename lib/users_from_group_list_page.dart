@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
+import 'package:todo_calendar_client/events_list_page.dart';
 import 'package:todo_calendar_client/models/requests/GroupInfoRequest.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
@@ -10,6 +11,7 @@ import 'package:todo_calendar_client/models/responses/GroupInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/GroupRequestedInfo.dart';
+import 'package:todo_calendar_client/participant_calendar_page.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 import 'models/responses/additional_responces/GroupGetResponse.dart';
@@ -29,6 +31,7 @@ class UsersFromGroupListPageWidget extends StatefulWidget {
 class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
 
   final int groupId;
+  int userId = -1;
 
   @override
   void initState() {
@@ -56,7 +59,7 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
       var json = jsonDecode(cachedData.toString());
       var cacheContent = ResponseWithToken.fromJson(json);
 
-      var userId = cacheContent.userId;
+      userId = cacheContent.userId;
       var token = cacheContent.token.toString();
 
       var model = new GroupInfoRequest(userId: userId, token: token, groupId: groupId);
@@ -233,7 +236,9 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
           itemBuilder: (context, index) {
             final data = usersList[index];
             return Card(
-              color: isColor ? Colors.cyan : Colors.greenAccent,
+              color: userId != data.userId
+                ? Colors.cyan
+                : Colors.red,
               elevation: 15,
               child: InkWell(
                 onTap: () {
@@ -275,9 +280,18 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
                       ),
                       SizedBox(height: 12),
                       ElevatedButton(
-                        child: Text('Посмотреть календарь'),
-                        onPressed: () async {
-
+                        child: Text('Посмотреть календарь пользователя'),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context)
+                            =>
+                            userId != data.userId
+                                ? ParticipantCalendarPageWidget(
+                                groupId: groupId,
+                                participantId: data.userId)
+                                : EventsListPageWidget()),
+                          );
                         },
                       ),
                     ],

@@ -74,12 +74,12 @@ class LoginPageState extends State<LoginPage> {
                 minimumSize: Size(150, 60),
               ),
               onPressed: () async {
-                setState(() async {
+                setState(() {
                   isEmailValidated = !emailController.text.isEmpty;
                   isPasswordValidated = !passwordController.text.isEmpty;
 
                   if (isEmailValidated && isPasswordValidated){
-                    await login(context);
+                    login(context);
                   }
                 });
               },

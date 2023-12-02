@@ -170,11 +170,11 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
-                  setState(() async {
+                  setState(() {
                     isNameValidated = !groupNameController.text.isEmpty;
 
                     if (isNameValidated){
-                      await addNewGroup(context);
+                      addNewGroup(context);
                     }
                   });
                 },

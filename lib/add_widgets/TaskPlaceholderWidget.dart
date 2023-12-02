@@ -208,12 +208,12 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
-                  setState(() async {
+                  setState(() {
                     isCaptionValidated = !taskCaptionController.text.isEmpty;
                     isDescriptionValidated = !taskDescriptionController.text.isEmpty;
 
                     if (isCaptionValidated && isDescriptionValidated){
-                      await addNewTask(context);
+                      addNewTask(context);
                     }
                   });
                 },
