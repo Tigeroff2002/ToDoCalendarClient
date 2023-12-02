@@ -14,6 +14,8 @@ import 'models/responses/TaskInfoResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
 class TasksListPageWidget extends StatefulWidget {
+  const TasksListPageWidget({super.key});
+
 
   @override
   TasksListPageState createState() => TasksListPageState();
@@ -33,7 +35,22 @@ class TasksListPageState extends State<TasksListPageWidget> {
 
   final EnumAliaser aliaser = new EnumAliaser();
 
-  List<TaskInfoResponse> tasksList = [];
+  var emptyTask = new TaskInfoResponse(
+      taskId: 1,
+      caption: 'caption',
+      description: 'description',
+      taskType: 'taskType',
+      taskStatus: 'taskStatus');
+
+  
+  List<TaskInfoResponse> tasksList = [
+    TaskInfoResponse(
+        taskId: 1,
+        caption: 'caption',
+        description: 'description',
+        taskType: 'taskType',
+        taskStatus: 'taskStatus')];
+
 
   Future<void> getUserInfo() async {
     MySharedPreferences mySharedPreferences = new MySharedPreferences();

@@ -14,6 +14,8 @@ import 'package:todo_calendar_client/users_from_group_list_page.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
 class GroupsListPageWidget extends StatefulWidget {
+  const GroupsListPageWidget({super.key});
+
 
   @override
   GroupsListPageState createState() => GroupsListPageState();
@@ -33,7 +35,13 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
 
   final EnumAliaser aliaser = new EnumAliaser();
 
-  List<GroupInfoResponse> groupsList = [];
+  List<GroupInfoResponse> groupsList = [
+    GroupInfoResponse(
+      groupId: 1,
+      groupType: 'd',
+      groupName: 'f'
+    )
+  ];
 
   Future<void> getUserInfo() async {
 

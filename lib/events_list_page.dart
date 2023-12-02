@@ -16,6 +16,8 @@ import 'package:todo_calendar_client/user_page.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
 class EventsListPageWidget extends StatefulWidget {
+  const EventsListPageWidget({super.key});
+
 
   @override
   EventsListPageState createState() => EventsListPageState();

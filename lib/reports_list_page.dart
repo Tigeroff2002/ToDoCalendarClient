@@ -13,6 +13,8 @@ import 'models/responses/ReportInfoResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
 class ReportsListPageWidget extends StatefulWidget {
+  const ReportsListPageWidget({super.key});
+
 
   @override
   ReportsListPageState createState() => ReportsListPageState();
@@ -32,7 +34,15 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
 
   final EnumAliaser aliaser = new EnumAliaser();
 
-  List<ReportInfoResponse> reportsList = [];
+  List<ReportInfoResponse> reportsList = [
+    ReportInfoResponse(
+      reportType: 'd',
+      beginMoment: 'e',
+      endMoment: 'df',
+      content: 'd',
+      creationTime: 'd'
+    )
+  ];
 
   Future<void> getUserInfo() async {
 
