@@ -6,6 +6,7 @@ import 'package:todo_calendar_client/models/responses/ShortUserInfoResponse.dart
 
 class TaskInfoResponse {
 
+  final int taskId;
   final String caption;
   final String description;
   final String taskType;
@@ -14,6 +15,7 @@ class TaskInfoResponse {
   //final ShortUserInfoResponse implementer;
 
   TaskInfoResponse({
+    required this.taskId,
     required this.caption,
     required this.description,
     required this.taskType,
@@ -24,6 +26,7 @@ class TaskInfoResponse {
 
   factory TaskInfoResponse.fromJson(Map <String, dynamic> json) {
     return TaskInfoResponse(
+        taskId: json['task_id'],
         caption: json['caption'],
         description: json['description'],
         taskType: json['task_type'],

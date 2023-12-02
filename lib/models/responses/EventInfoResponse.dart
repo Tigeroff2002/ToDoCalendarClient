@@ -8,6 +8,7 @@ import 'package:todo_calendar_client/models/responses/UserInfoWithDecisionRespon
 
 class EventInfoResponse {
 
+  final int eventId;
   final String caption;
   final String description;
   final String start;
@@ -19,6 +20,7 @@ class EventInfoResponse {
   //final List<UserInfoWithDecisionResponse> guests;
 
   EventInfoResponse({
+    required this.eventId,
     required this.caption,
     required this.description,
     required this.start,
@@ -32,6 +34,7 @@ class EventInfoResponse {
 
   factory EventInfoResponse.fromJson(Map <String, dynamic> json) {
     return EventInfoResponse(
+      eventId: json['event_id'],
       caption: json['caption'],
       description: json['description'],
       start: json['scheduled_start'],

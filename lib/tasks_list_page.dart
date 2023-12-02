@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
+import 'package:todo_calendar_client/edit_widgets/TaskEditingPageWidget.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
@@ -200,7 +201,17 @@ class TasksListPageState extends State<TasksListPageWidget> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 8)
+                      SizedBox(height: 12),
+                      ElevatedButton(
+                        child: Text('Редактировать задачу'),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context)
+                            => TaskEditingPageWidget(taskId: data.taskId)),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
