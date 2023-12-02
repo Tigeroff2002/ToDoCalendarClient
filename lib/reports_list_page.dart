@@ -208,7 +208,7 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
                         ),
                       ),
                       Text(
-                        utf8.decode(data.beginMoment.codeUnits),
+                        utf8.decode(utf8.encode(data.content)),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

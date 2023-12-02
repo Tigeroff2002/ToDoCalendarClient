@@ -14,11 +14,16 @@ class ReportPlaceholderWidget extends StatefulWidget{
   final String text;
   final int index;
 
-  ReportPlaceholderWidget({required this.color, required this.text, required this.index});
+  ReportPlaceholderWidget(
+      {
+        required this.color,
+        required this.text,
+        required this.index
+      });
 
   @override
   ReportPlaceholderState createState(){
-    return new ReportPlaceholderState(color: color, text: text, index: index);
+    return new ReportPlaceholderState(color: color, text: text, index: index, isPageJustLoaded: true);
   }
 }
 
@@ -28,18 +33,27 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
   final String text;
   final int index;
 
+  bool isPageJustLoaded;
+
+  bool isBeginTimeChanged = false;
+  bool isEndTimeChanged = false;
+
+  bool isReportEndTimeGreaterThanBeginTime = true;
+  bool isReportDurationValidated = true;
+
   final TextEditingController reportTypeController = TextEditingController();
 
   ReportPlaceholderState(
       {
         required this.color,
         required this.text,
-        required this.index
+        required this.index,
+        required this.isPageJustLoaded
       });
 
   Future<void> addNewReport(BuildContext context) async
   {
-    String reportType = reportTypeController.text;
+    String reportType = selectedReportType;
     String beginMoment = selectedBeginDateTime.toString();
     String endMoment = selectedEndDateTime.toString();
 
@@ -124,20 +138,39 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
 
     var reportTypes = ['None', 'EventsReport', 'TasksReport'];
 
-    selectedBeginDateTime = DateTime.now();
-    selectedEndDateTime = DateTime.now();
+    var showingBeginHours = selectedBeginDateTime.hour.toString().padLeft(2, '0');
+    var showingBeginMinutes = selectedBeginDateTime.minute.toString().padLeft(2, '0');
 
-    final beginHours = selectedBeginDateTime.hour.toString().padLeft(2, '0');
-    final beginMinutes = selectedBeginDateTime.minute.toString().padLeft(2, '0');
+    var showingEndHours = selectedEndDateTime.hour.toString().padLeft(2, '0');
+    var showingEndMinutes = selectedEndDateTime.minute.toString().padLeft(2, '0');
 
-    final showingBeginHours = (selectedBeginDateTime.hour + 1).toString().padLeft(2, '0');
-    final showingBeginMinutes = 0.toString().padLeft(2, '0');
+    if (isPageJustLoaded) {
+      selectedBeginDateTime = DateTime.now();
+      selectedEndDateTime = DateTime.now();
+      isPageJustLoaded = false;
 
-    final endHours = selectedEndDateTime.hour.toString().padLeft(2, '0');
-    final endMinutes = selectedEndDateTime.minute.toString().padLeft(2, '0');
+      if (!isBeginTimeChanged){
+        showingBeginHours = (selectedBeginDateTime.hour + 1).toString().padLeft(2, '0');
+        showingBeginMinutes = 0.toString().padLeft(2, '0');
+      }
 
-    final showingEndHours = (selectedEndDateTime.hour + 1).toString().padLeft(2, '0');
-    final showingEndMinutes = 0.toString().padLeft(2, '0');
+      if (!isEndTimeChanged){
+        showingEndHours = (selectedEndDateTime.hour + 1).toString().padLeft(2, '0');
+        showingEndMinutes = 0.toString().padLeft(2, '0');
+      }
+    }
+
+    outputBeginDateTime = '${selectedBeginDateTime.year}'
+        '/${selectedBeginDateTime.month}'
+        '/${selectedBeginDateTime.day}'
+        ' $showingBeginHours'
+        ':$showingBeginMinutes';
+
+    outputEndDateTime = '${selectedEndDateTime.year}'
+        '/${selectedEndDateTime.month}'
+        '/${selectedEndDateTime.day}'
+        ' $showingEndHours'
+        ':$showingEndMinutes';
 
     Future<DateTime?> pickDate(DateTime selectedDateTime) => showDatePicker(
         context: context,
@@ -202,7 +235,6 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.0),
-            if(index == 4) ...[
               SizedBox(height: 16.0),
               Text(
                 'Тип отчета',
@@ -237,14 +269,26 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
                       borderRadius: BorderRadius.circular(20.0)),
                   minimumSize: Size(250, 100),
                 ),
-                child: Text(
+                child: Text(outputBeginDateTime),
+                onPressed: () async {
+                  await pickBeginDateTime();
+                  setState(() {
+                    isBeginTimeChanged = true;
+                    outputBeginDateTime =
                     '${selectedBeginDateTime.year}'
                         '/${selectedBeginDateTime.month}'
                         '/${selectedBeginDateTime.day}'
-                        ' $showingBeginHours'
-                        ':$showingBeginMinutes'),
-                onPressed: () async {
-                  await pickBeginDateTime();
+                        ' ${selectedBeginDateTime.hour}'
+                        ':${selectedBeginDateTime.minute}';
+
+                    isReportEndTimeGreaterThanBeginTime =
+                        selectedEndDateTime.millisecondsSinceEpoch
+                            > selectedBeginDateTime.millisecondsSinceEpoch;
+
+                    isReportDurationValidated =
+                        (selectedEndDateTime.difference(selectedBeginDateTime)
+                            .inMilliseconds) < (3600 * 24 * 1000 * 30);
+                  });
                 },
               ),
               SizedBox(height: 12.0),
@@ -253,9 +297,12 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 4.0),
-              ElevatedButton(
+              TextButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor:
+                  isReportDurationValidated && isReportEndTimeGreaterThanBeginTime
+                      ? Colors.green
+                      : Colors.red,
                   foregroundColor : Colors.white,
                   shadowColor: Colors.cyan,
                   elevation: 3,
@@ -263,26 +310,56 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
                       borderRadius: BorderRadius.circular(20.0)),
                   minimumSize: Size(250, 100),
                 ),
-                child: Text(
+                child:
+                isReportDurationValidated && isReportEndTimeGreaterThanBeginTime
+                    ? Text(outputEndDateTime)
+                    : !isReportEndTimeGreaterThanBeginTime
+                    ? Text('Время окончания ' + outputEndDateTime
+                    + ' должно быть больше времени начала')
+                    : Text('Время окончания ' + outputEndDateTime
+                    + ' должно быть не позже месяца после начала'),
+                onPressed: () async {
+                  await pickEndDateTime();
+                  setState(() {
+                    isEndTimeChanged = true;
+                    outputBeginDateTime =
                     '${selectedEndDateTime.year}'
                         '/${selectedEndDateTime.month}'
                         '/${selectedEndDateTime.day}'
-                        ' $showingEndHours'
-                        ':$showingEndMinutes'),
-                onPressed: () async {
-                  await pickEndDateTime();
+                        ' ${selectedEndDateTime.hour}'
+                        ':${selectedEndDateTime.minute}';
+
+                    isReportEndTimeGreaterThanBeginTime =
+                        selectedEndDateTime.millisecondsSinceEpoch
+                            > selectedBeginDateTime.millisecondsSinceEpoch;
+
+                    isReportDurationValidated =
+                        (selectedEndDateTime.difference(selectedBeginDateTime)
+                            .inMilliseconds) < (3600 * 24 * 1000 * 30);
+                  });
                 },
               ),
-            ],
-            if(index == 4) ...[
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
-                  await addNewReport(context);
+                  setState(() {
+                    isReportEndTimeGreaterThanBeginTime =
+                        selectedEndDateTime.millisecondsSinceEpoch
+                            > selectedBeginDateTime.millisecondsSinceEpoch;
+
+                    isReportDurationValidated =
+                        (selectedEndDateTime.difference(selectedBeginDateTime).inMilliseconds)
+                            < (3600 * 24 * 1000 * 30);
+
+                    if (isReportDurationValidated
+                        && isReportEndTimeGreaterThanBeginTime){
+                      realReportType = selectedReportType;
+                      addNewReport(context);
+                    }
+                  });
                 },
                 child: Text('Создать новый отчет'),
               ),
-            ],
           ]
       ),
     );
@@ -292,4 +369,9 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
 
   DateTime selectedBeginDateTime = DateTime.now();
   DateTime selectedEndDateTime = DateTime.now();
+
+  String realReportType = 'None';
+
+  String outputBeginDateTime = '';
+  String outputEndDateTime = '';
 }
