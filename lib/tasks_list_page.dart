@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
+import 'add_widgets/TaskPlaceholderWidget.dart';
 import 'models/responses/TaskInfoResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
@@ -128,7 +129,31 @@ class TasksListPageState extends State<TasksListPageWidget> {
             },
           ),
         ),
-        body: ListView.builder(
+        body: tasksList.length == 0
+        ? Column(
+          children: [
+            SizedBox(height: 16.0),
+            Text(
+              'Вы не брали ни одной задачи на реализацию',
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 26),
+              textAlign: TextAlign.center),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+                child: Text('Создать новую задачу'),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context)
+                      => TaskPlaceholderWidget(
+                          color: Colors.greenAccent, text: 'Составление новой задачи', index: 2))
+                  );
+                })
+          ],
+        )
+        : ListView.builder(
           itemCount: tasksList.length,
           itemBuilder: (context, index) {
             final data = tasksList[index];

@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
+import 'add_widgets/ReportPlaceholderWidget.dart';
 import 'models/responses/ReportInfoResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
@@ -127,7 +128,33 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
             },
           ),
         ),
-        body: ListView.builder(
+        body: reportsList.length == 0
+        ? Column(
+          children: [
+            SizedBox(height: 16.0),
+            Text(
+              'Вы пока не составили ни одного отчета',
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 26),
+              textAlign: TextAlign.center),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+                child: Text('Составить новый отчет'),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context)
+                      => ReportPlaceholderWidget(
+                          color: Colors.greenAccent,
+                          text: 'Составление нового отчета',
+                          index: 4))
+                  );
+                })
+          ],
+        )
+        : ListView.builder(
           itemCount: reportsList.length,
           itemBuilder: (context, index) {
             final data = reportsList[index];

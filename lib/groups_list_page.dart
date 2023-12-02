@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
+import 'package:todo_calendar_client/add_widgets/GroupPlaceholderWidget.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/GroupInfoResponse.dart';
@@ -128,7 +129,31 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
             },
           ),
         ),
-        body: ListView.builder(
+        body: groupsList.length == 0
+        ? Column(
+          children: [
+            SizedBox(height: 16.0),
+            Text(
+                'Вы не состоите ни в одной группе',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24),
+                textAlign: TextAlign.center),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              child: Text('Создать новую группу'),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context)
+                    => GroupPlaceholderWidget(
+                  color: Colors.greenAccent, text: 'Составление новой группы', index: 1))
+                );
+              })
+          ],
+        )
+        : ListView.builder(
           itemCount: groupsList.length,
           itemBuilder: (context, index) {
             final data = groupsList[index];
