@@ -1,9 +1,12 @@
-class EventAppointment{
+class EventAppointment {
+
+  late int eventId;
   late DateTime startTime;
   late DateTime endTime;
   late String subject;
 
-  EventAppointment(String start, String difference, String caption){
+  EventAppointment(int id, String start, String difference, String caption){
+    eventId = id;
     startTime = DateTime.parse(start);
     String time = difference;
     List<String> timeParts = time.split(':');
