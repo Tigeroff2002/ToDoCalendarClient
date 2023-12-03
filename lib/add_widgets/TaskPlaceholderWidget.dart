@@ -146,8 +146,8 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                   text,
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 16.0),
-                  SizedBox(height: 12.0),
+                SizedBox(height: 30.0),
+                  SizedBox(height: 16.0),
                   TextField(
                     controller: taskCaptionController,
                     decoration: InputDecoration(
@@ -206,7 +206,7 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                           selectedTaskStatus = newStatus.toString();
                         });
                       }),
-                  SizedBox(height: 24.0),
+                  SizedBox(height: 30.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

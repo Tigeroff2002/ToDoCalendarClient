@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_calendar_client/additional_page.dart';
+import 'package:todo_calendar_client/profile_page.dart';
 import 'package:todo_calendar_client/user_info_map.dart';
 import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/api_requests.dart';

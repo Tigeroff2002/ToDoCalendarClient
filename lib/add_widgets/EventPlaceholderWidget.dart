@@ -428,7 +428,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                       selectedEventStatus = newStatus.toString();
                     });
                   }),
-              SizedBox(height: 16.0),
+              SizedBox(height: 30.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,

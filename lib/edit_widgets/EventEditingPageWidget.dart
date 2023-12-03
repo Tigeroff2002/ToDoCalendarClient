@@ -355,6 +355,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 30.0),
+                  SizedBox(height: 16.0),
                   TextField(
                     controller: eventCaptionController,
                     decoration: InputDecoration(
@@ -502,7 +503,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                           selectedEventStatus = newStatus.toString();
                         });
                       }),
-                  SizedBox(height: 24),
+                  SizedBox(height: 30.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,

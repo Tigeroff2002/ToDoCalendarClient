@@ -232,7 +232,8 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
                 'Изменение существующей задачи',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 30.0),
+              SizedBox(height: 16.0),
               TextField(
                 controller: taskCaptionController,
                 decoration: InputDecoration(
@@ -297,7 +298,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
                       selectedTaskStatus = newStatus.toString();
                     });
                   }),
-              SizedBox(height: 16.0),
+              SizedBox(height: 30.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,

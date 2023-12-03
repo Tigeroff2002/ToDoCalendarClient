@@ -227,14 +227,16 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
 
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: Column(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(32),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               text,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 30.0),
               SizedBox(height: 16.0),
               Text(
                 'Тип отчета',
@@ -339,7 +341,7 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
                   });
                 },
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 30.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -370,6 +372,7 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
               ),
           ]
       ),
+      )
     );
   }
 

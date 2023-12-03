@@ -6,7 +6,7 @@ import 'package:todo_calendar_client/models/responses/additional_responces/Respo
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_info_map.dart';
 
-import 'additional_page.dart';
+import 'profile_page.dart';
 import 'home_page.dart';
 
 class PersonalAccount extends StatefulWidget{
@@ -72,81 +72,77 @@ class PersonalAccountState extends State<PersonalAccount> {
           title: Text('Главная страница календаря'),
             centerTitle: true
         ),
-        body: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Добро пожаловать, " + currentUserName,
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 30.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor : Colors.white,
-                      shadowColor: Colors.greenAccent,
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(36.0)),
-                      minimumSize: Size(150, 60),
+        body: Center(
+          child: Padding(
+              padding: EdgeInsets.all(6.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Добро пожаловать, " + currentUserName,
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UserInfoMapPage()),);
-                    },
-                    child: Text('Личный кабинет'),
-                  ),
-                  SizedBox(height: 30.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor : Colors.white,
-                      shadowColor: Colors.greenAccent,
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(36.0)),
-                      minimumSize: Size(150, 60),
+                    SizedBox(height: 30.0),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor : Colors.white,
+                        shadowColor: Colors.greenAccent,
+                        elevation: 3,
+                        minimumSize: Size(200, 60),
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserInfoMapPage()),);
+                      },
+                      child: Text('Личный кабинет'),
                     ),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdditionalPageWidget()),);
-                    },
-                    child: Text('Страница с логотопипом'),
-                  ),
-                  SizedBox(height: 30.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor : Colors.white,
-                      shadowColor: Colors.greenAccent,
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(36.0)),
-                      minimumSize: Size(150, 60),
+                    SizedBox(height: 30.0),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor : Colors.white,
+                        shadowColor: Colors.greenAccent,
+                        elevation: 3,
+                        minimumSize: Size(200, 60),
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AdditionalPageWidget()),);
+                      },
+                      child: Text('Профиль пользователя'),
                     ),
-                    onPressed: () {
-                      MySharedPreferences mySharedPreferences = new MySharedPreferences();
-                      mySharedPreferences.clearData();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HomePage()),);
-                    },
-                    child: Text('Выйти из аккаунта'),
-                  ),
-                ],
-              ),
-            )
-        ),
-      ),
+                    SizedBox(height: 36.0),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor : Colors.white,
+                        shadowColor: Colors.greenAccent,
+                        elevation: 3,
+                        minimumSize: Size(200, 60),
+                      ),
+                      onPressed: () {
+                        MySharedPreferences mySharedPreferences = new MySharedPreferences();
+                        mySharedPreferences.clearData();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePage()),);
+                      },
+                      child: Text('Выйти из аккаунта'),
+                    ),
+                  ],
+                ),
+              )
+          ),
+        )
+      )
     );
   }
   
