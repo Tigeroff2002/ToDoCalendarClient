@@ -147,12 +147,12 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                if(index == 3) ...[
                   SizedBox(height: 12.0),
                   TextField(
                     controller: taskCaptionController,
                     decoration: InputDecoration(
                         labelText: 'Наименование задачи: ',
+                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange),
                         errorText: !isCaptionValidated
                             ? 'Название задачи не может быть пустым'
                             : null
@@ -164,17 +164,18 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                     maxLines: null,
                     decoration: InputDecoration(
                         labelText: 'Описание задачи: ',
+                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange),
                         errorText: !isDescriptionValidated
                             ? 'Описание мероприятия не может быть пустым'
                             : null
                     ),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 16.0),
                   Text(
                     'Тип задачи',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
                   ),
-                  SizedBox(height: 4.0),
+                  SizedBox(height: 8.0),
                   DropdownButton(
                       value: selectedTaskType,
                       items: taskTypes.map((String type){
@@ -190,9 +191,9 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                   SizedBox(height: 12.0),
                   Text(
                     'Статус задачи',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
                   ),
-                  SizedBox(height: 4.0),
+                  SizedBox(height: 8.0),
                   DropdownButton(
                       value: selectedTaskStatus,
                       items: taskStatuses.map((String status){
@@ -205,10 +206,16 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                           selectedTaskStatus = newStatus.toString();
                         });
                       }),
-                ],
-                if(index == 3) ...[
-                  SizedBox(height: 16.0),
+                  SizedBox(height: 24.0),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor : Colors.white,
+                        shadowColor: Colors.cyan,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        minimumSize: Size(150, 50)),
                     onPressed: () async {
                       setState(() {
                         isCaptionValidated = !taskCaptionController.text.isEmpty;
@@ -222,7 +229,6 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                     child: Text('Создать новую задачу'),
                   ),
                 ],
-              ]
           ),
       )
     );

@@ -125,6 +125,7 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
   @override
   Widget build(BuildContext context){
     return MaterialApp(
+      theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Список созданных отчетов'),
@@ -152,6 +153,15 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
             SizedBox(height: 16.0),
             ElevatedButton(
                 child: Text('Составить новый отчет'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.cyan,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  minimumSize: Size(150, 50),
+                ),
                 onPressed: () {
                   Navigator.pushReplacement(
                       context,

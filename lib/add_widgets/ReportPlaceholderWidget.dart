@@ -238,7 +238,7 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
               SizedBox(height: 16.0),
               Text(
                 'Тип отчета',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20, color: Colors.deepOrange),
               ),
               SizedBox(height: 4.0),
               DropdownButton(
@@ -253,12 +253,12 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
                       selectedReportType = newType.toString();
                     });
                   }),
-              SizedBox(height: 12.0),
+              SizedBox(height: 16.0),
               Text(
                 'Время начала отчета',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
-              SizedBox(height: 4.0),
+              SizedBox(height: 12.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -291,12 +291,12 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
                   });
                 },
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 20.0),
               Text(
                 'Время окончания отчета',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
-              SizedBox(height: 4.0),
+              SizedBox(height: 12.0),
               TextButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
@@ -341,6 +341,14 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor : Colors.white,
+                    shadowColor: Colors.cyan,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    minimumSize: Size(150, 50)),
                 onPressed: () async {
                   setState(() {
                     isReportEndTimeGreaterThanBeginTime =

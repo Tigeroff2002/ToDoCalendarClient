@@ -124,6 +124,7 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
   @override
   Widget build(BuildContext context){
     return MaterialApp(
+      theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Список групп'),
@@ -151,6 +152,15 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
             SizedBox(height: 16.0),
             ElevatedButton(
               child: Text('Создать новую группу'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.cyan,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  minimumSize: Size(150, 50),
+                ),
               onPressed: () {
                 Navigator.pushReplacement(
                   context,

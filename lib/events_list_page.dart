@@ -143,6 +143,7 @@ class EventsListPageState extends State<EventsListPageWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Календарь мероприятий'),
@@ -157,7 +158,7 @@ class EventsListPageState extends State<EventsListPageWidget> {
           ),
         ),
         body: SfCalendar(
-          view: CalendarView.week,
+          view: CalendarView.day,
           firstDayOfWeek: 1,
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),

@@ -276,12 +276,14 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 30.0),
-            if(index == 1) ...[
               SizedBox(height: 16.0),
               TextField(
                 controller: eventCaptionController,
                 decoration: InputDecoration(
                   labelText: 'Наименование мероприятия:',
+                    labelStyle: TextStyle(
+                        color: Colors.deepOrange
+                    ),
                     errorText: !isCaptionValidated
                         ? 'Название мероприятия не может быть пустым'
                         : null
@@ -293,6 +295,9 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                 maxLines: null,
                 decoration: InputDecoration(
                   labelText: 'Описание меропрития:',
+                    labelStyle: TextStyle(
+                        color: Colors.deepOrange
+                    ),
                     errorText: !isDescriptionValidated
                         ? 'Описание мероприятия не может быть пустым'
                         : null
@@ -301,9 +306,9 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               SizedBox(height: 20.0),
               Text(
                 'Время начала мероприятия',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
-              SizedBox(height: 6.0),
+              SizedBox(height: 12.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -336,12 +341,12 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                   });
                 },
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 24.0),
               Text(
                 'Время окончания мероприятия',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
-              SizedBox(height: 6.0),
+              SizedBox(height: 12.0),
               TextButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
@@ -384,14 +389,17 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                   });
                 },
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 24.0),
               Text(
                 'Тип мероприятия',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
               SizedBox(height: 4.0),
               DropdownButtonFormField(
                   value: selectedEventType,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange)
+                  ),
                   items: eventTypes.map((String type){
                     return DropdownMenuItem(
                         value: type,
@@ -405,7 +413,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               SizedBox(height: 20.0),
               Text(
                 'Статус мероприятия',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
               SizedBox(height: 4.0),
               DropdownButtonFormField(
@@ -420,8 +428,6 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                       selectedEventStatus = newStatus.toString();
                     });
                   }),
-            ],
-            if(index == 1) ...[
               SizedBox(height: 16.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -453,7 +459,6 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                 child: Text('Создать новое мероприятие'),
               ),
             ],
-          ]
       ),
     )
     );

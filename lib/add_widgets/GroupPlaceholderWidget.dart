@@ -142,17 +142,21 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
                 controller: groupNameController,
                 decoration: InputDecoration(
                   labelText: 'Наименование группы:',
+                    labelStyle: TextStyle(
+                      fontSize: 16.0,
+                        color: Colors.deepOrange
+                    ),
                     errorText: !isNameValidated
                         ? 'Название группы не может быть пустым'
                         : null
                 ),
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 20.0),
               Text(
                 'Тип группы:',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
-              SizedBox(height: 4.0),
+              SizedBox(height: 8.0),
               DropdownButton(
                   value: selectedGroupType,
                   items: groupTypes.map((String type){
@@ -166,9 +170,16 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
                     });
                   }),
             ],
-            if(index == 2) ...[
-              SizedBox(height: 16.0),
+              SizedBox(height: 24.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor : Colors.white,
+                    shadowColor: Colors.cyan,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    minimumSize: Size(150, 50)),
                 onPressed: () async {
                   setState(() {
                     isNameValidated = !groupNameController.text.isEmpty;
@@ -181,7 +192,6 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
                 child: Text('Создать новую группу'),
               ),
             ],
-          ]
       ),
     );
   }

@@ -180,7 +180,7 @@ class ParticipantCalendarPageState extends State<ParticipantCalendarPageWidget> 
           ),
         ),
         body: SfCalendar(
-          view: CalendarView.week,
+          view: CalendarView.day,
           firstDayOfWeek: 1,
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -36,88 +37,6 @@ class RegisterPageState extends State<RegisterPage> {
     passwordController.dispose();
     phoneNumberController.dispose();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Регистрация нового пользователя'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Электронная почта: ',
-                  errorText: !isEmailValidated
-                      ? 'Почта не может быть пустой'
-                      : null
-              ),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(
-                labelText: 'Имя пользователя: ',
-                  errorText: !isNameValidated
-                      ? 'Имя не может быть пустым'
-                      : null
-              ),
-            ),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Пароль: ',
-                  errorText: !isPasswordValidated
-                      ? 'Пароль не может быть пустым'
-                      : null
-              ),
-            ),
-            SizedBox(height: 30.0),
-            TextField(
-              controller: phoneNumberController,
-              decoration: InputDecoration(
-                labelText: 'Номер телефона: ',
-                  errorText: !isPhoneValidated
-                      ? 'Номер телефона не может быть пустым'
-                      : null
-              ),
-            ),
-            SizedBox(height: 30.0),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor : Colors.white,
-                  shadowColor: Colors.greenAccent,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(36.0)),
-                  minimumSize: Size(150, 60),
-                ),
-              onPressed: () async {
-                setState(() {
-                  isEmailValidated = !emailController.text.isEmpty;
-                  isNameValidated = !usernameController.text.isEmpty;
-                  isPasswordValidated = !passwordController.text.isEmpty;
-                  isPhoneValidated = !phoneNumberController.text.isEmpty;
-
-                  if (isEmailValidated && isPasswordValidated
-                        && isNameValidated && isPhoneValidated){
-                    register(context);
-                  }
-                });
-              },
-              child: Text('Зарегистрироваться'),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Future<void> register(BuildContext context) async {
@@ -201,5 +120,103 @@ class RegisterPageState extends State<RegisterPage> {
       else
         print("Unhandled exception: ${e.toString()}");
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Регистрация нового аккаунта'),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                    labelText: 'Электронная почта: ',
+                    labelStyle: TextStyle(
+                        color: Colors.deepOrange
+                    ),
+                    errorText: !isEmailValidated
+                        ? 'Почта не может быть пустой'
+                        : null
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(
+                    labelText: 'Имя пользователя: ',
+                    labelStyle: TextStyle(
+                        color: Colors.deepOrange
+                    ),
+                    errorText: !isNameValidated
+                        ? 'Имя не может быть пустым'
+                        : null
+                ),
+              ),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                    labelText: 'Пароль: ',
+                    labelStyle: TextStyle(
+                        color: Colors.deepOrange
+                    ),
+                    errorText: !isPasswordValidated
+                        ? 'Пароль не может быть пустым'
+                        : null
+                ),
+              ),
+              SizedBox(height: 30.0),
+              TextField(
+                controller: phoneNumberController,
+                decoration: InputDecoration(
+                    labelText: 'Номер телефона: ',
+                    labelStyle: TextStyle(
+                        color: Colors.deepOrange
+                    ),
+                    errorText: !isPhoneValidated
+                        ? 'Номер телефона не может быть пустым'
+                        : null
+                ),
+              ),
+              SizedBox(height: 30.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.greenAccent,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(36.0)),
+                  minimumSize: Size(150, 60),
+                ),
+                onPressed: () async {
+                  setState(() {
+                    isEmailValidated = !emailController.text.isEmpty;
+                    isNameValidated = !usernameController.text.isEmpty;
+                    isPasswordValidated = !passwordController.text.isEmpty;
+                    isPhoneValidated = !phoneNumberController.text.isEmpty;
+
+                    if (isEmailValidated && isPasswordValidated
+                        && isNameValidated && isPhoneValidated){
+                      register(context);
+                    }
+                  });
+                },
+                child: Text('Зарегистрироваться'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

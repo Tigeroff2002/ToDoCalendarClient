@@ -47,32 +47,30 @@ class _HomeState extends State<HomeMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Личный кабинет пользователя'),
-      ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.lightBlue,
-        selectedItemColor: Colors.greenAccent,
-        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.shifting,
+        backgroundColor: Colors.teal,
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.greenAccent,
+        iconSize: 40.0,
         currentIndex: _currentIndex,
         onTap: onTabTapped,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_alarm),
+            icon: Icon(Icons.access_alarms),
             label: 'Мои мероприятия',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_business_outlined),
+            icon: Icon(Icons.business_outlined),
             label: 'Мои группы',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_task),
-            label: 'Мои задачи на реализацию',
+            icon: Icon(Icons.task_outlined),
+            label: 'Мои задачи',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_comment_rounded),
+            icon: Icon(Icons.comment_rounded),
             label: 'Мои отчеты',
           ),
         ],

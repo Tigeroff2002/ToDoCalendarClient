@@ -359,17 +359,22 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                     controller: eventCaptionController,
                     decoration: InputDecoration(
                         labelText: 'Наименование мероприятия:',
+                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange),
                         errorText: !isCaptionValidated
                             ? 'Название мероприятия не может быть пустым'
                             : null
                     ),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 16.0),
                   TextFormField(
                     controller: eventDescriptionController,
                     maxLines: null,
                     decoration: InputDecoration(
                         labelText: 'Описание меропрития:',
+                        labelStyle: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.deepOrange
+                        ),
                         errorText: !isDescriptionValidated
                             ? 'Описание мероприятия не может быть пустым'
                             : null
@@ -378,9 +383,9 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   SizedBox(height: 20.0),
                   Text(
                     'Время начала мероприятия',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
                   ),
-                  SizedBox(height: 6.0),
+                  SizedBox(height: 12.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -413,12 +418,12 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                       });
                     },
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 24.0),
                   Text(
                     'Время окончания мероприятия',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
                   ),
-                  SizedBox(height: 6.0),
+                  SizedBox(height: 12.0),
                   TextButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
@@ -464,7 +469,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   SizedBox(height: 16.0),
                   Text(
                     'Тип мероприятия',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, color: Colors.deepOrange),
                   ),
                   SizedBox(height: 4.0),
                   DropdownButtonFormField(
@@ -482,7 +487,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   SizedBox(height: 20.0),
                   Text(
                     'Статус мероприятия',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, color: Colors.deepOrange),
                   ),
                   SizedBox(height: 4.0),
                   DropdownButtonFormField(
@@ -497,7 +502,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                           selectedEventStatus = newStatus.toString();
                         });
                       }),
-                  SizedBox(height: 16.0),
+                  SizedBox(height: 24),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,

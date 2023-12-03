@@ -16,48 +16,52 @@ class HomePage extends StatelessWidget {
     var monthDayNumber = DateTime.now().day.toString();
     var pictureUrl = pictureUrlPart1 + monthDayNumber + pictureUrlPart2;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Календарь Tigeroff приветствует вас сегодня !'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor : Colors.white,
-                shadowColor: Colors.greenAccent,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0)),
-                minimumSize: Size(200, 80),
-              ),
-              onPressed: () {
-                MySharedPreferences mySharedPreferences = new MySharedPreferences();
+    return MaterialApp(
+        theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
+      home: Scaffold(
+        appBar: AppBar(
+            title: Text('Календарь Tigeroff'),
+            centerTitle: true
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.greenAccent,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0)),
+                  minimumSize: Size(200, 80),
+                ),
+                onPressed: () {
+                  MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-                var cachedData =
+                  var cachedData =
                   mySharedPreferences.getDataIfNotExpired();
 
-                cachedData.then((value) =>
+                  cachedData.then((value) =>
                   value == null
                       ?   Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AuthorizationPage()),)
+                    context,
+                    MaterialPageRoute(builder: (context) => AuthorizationPage()),)
                       : Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => UserPage())));
-              },
-              child: Text('Запуск календаря'),
-            ),
-            SizedBox(height: 40),
-            GestureDetector(
-              child: Image.network(pictureUrl)
-            ),
-          ],
+                      context,
+                      MaterialPageRoute(builder: (context) => UserPage())));
+                },
+                child: Text('Запуск календаря'),
+              ),
+              SizedBox(height: 40),
+              GestureDetector(
+                  child: Image.network(pictureUrl)
+              ),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }

@@ -32,66 +32,6 @@ class LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Вход в существующую учетную запись'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Электронная почта: ',
-                errorText: !isEmailValidated
-                    ? 'Почта не может быть пустой'
-                    : null
-              ),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Пароль: ',
-                  errorText: !isPasswordValidated
-                      ? 'Пароль не может быть пустым'
-                      : null
-              ),
-            ),
-            SizedBox(height: 30.0),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor : Colors.white,
-                shadowColor: Colors.greenAccent,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(36.0)),
-                minimumSize: Size(150, 60),
-              ),
-              onPressed: () async {
-                setState(() {
-                  isEmailValidated = !emailController.text.isEmpty;
-                  isPasswordValidated = !passwordController.text.isEmpty;
-
-                  if (isEmailValidated && isPasswordValidated){
-                    login(context);
-                  }
-                });
-              },
-              child: Text('Войти'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> login(BuildContext context) async {
     String email = emailController.text;
     String password = passwordController.text;
@@ -157,5 +97,75 @@ class LoginPageState extends State<LoginPage> {
       else
         print("Unhandled exception: ${e.toString()}");
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Вход в ваш аккаунт'),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                    labelText: 'Электронная почта: ',
+                    labelStyle: TextStyle(
+                      color: Colors.deepOrange
+                    ),
+                    errorText: !isEmailValidated
+                        ? 'Почта не может быть пустой'
+                        : null
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                    labelText: 'Пароль: ',
+                    labelStyle: TextStyle(
+                        color: Colors.deepOrange
+                    ),
+                    errorText: !isPasswordValidated
+                        ? 'Пароль не может быть пустым'
+                        : null
+                ),
+              ),
+              SizedBox(height: 30.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.greenAccent,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(36.0)),
+                  minimumSize: Size(150, 60),
+                ),
+                onPressed: () async {
+                  setState(() {
+                    isEmailValidated = !emailController.text.isEmpty;
+                    isPasswordValidated = !passwordController.text.isEmpty;
+
+                    if (isEmailValidated && isPasswordValidated){
+                      login(context);
+                    }
+                  });
+                },
+                child: Text('Войти'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

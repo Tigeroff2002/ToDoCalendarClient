@@ -39,11 +39,6 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
   Future<void> getExistedTask(BuildContext context) async
   {
-    String caption = taskCaptionController.text;
-    String description = taskDescriptionController.text;
-    String taskType = selectedTaskType.toString();
-    String taskStatus = selectedTaskStatus.toString();
-
     MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
     var cachedData = await mySharedPreferences.getDataIfNotExpired();
@@ -73,6 +68,13 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
             var userRequestedInfo = responseContent.requestedInfo.toString();
 
             print(userRequestedInfo);
+
+            setState(() {
+              existedCaption = 'Старое название';
+              existedDescription = 'Старое описание';
+              taskCaptionController.text = existedCaption;
+              taskDescriptionController.text = existedDescription;
+            });
           }
       }
       catch (e) {
@@ -235,6 +237,10 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
                 controller: taskCaptionController,
                 decoration: InputDecoration(
                     labelText: 'Наименование задачи: ',
+                    labelStyle: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.deepOrange
+                    ),
                     errorText: !isCaptionValidated
                         ? 'Название задачи не может быть пустым'
                         : null
@@ -246,6 +252,10 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
                 maxLines: null,
                 decoration: InputDecoration(
                     labelText: 'Описание задачи: ',
+                    labelStyle: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.deepOrange
+                    ),
                     errorText: !isDescriptionValidated
                         ? 'Описание мероприятия не может быть пустым'
                         : null
@@ -254,7 +264,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
               SizedBox(height: 12.0),
               Text(
                 'Тип задачи',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
               ),
               SizedBox(height: 4.0),
               DropdownButton(
@@ -272,7 +282,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
               SizedBox(height: 12.0),
               Text(
                 'Статус задачи',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 16, color : Colors.deepOrange),
               ),
               SizedBox(height: 4.0),
               DropdownButton(
@@ -289,6 +299,15 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
                   }),
               SizedBox(height: 16.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.cyan,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  minimumSize: Size(250, 100),
+                ),
                 onPressed: () async {
                   setState(() {
                     isCaptionValidated = !taskCaptionController.text.isEmpty;
@@ -310,4 +329,9 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
   String selectedTaskType = 'None';
   String selectedTaskStatus = 'None';
+
+  String existedCaption = '';
+  String existedDescription = '';
+  String existedTaskType = 'None';
+  String existedTaskStatus = 'None';
 }

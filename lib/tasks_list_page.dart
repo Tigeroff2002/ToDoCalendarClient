@@ -133,6 +133,7 @@ class TasksListPageState extends State<TasksListPageWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Список задач на реализацию'),
@@ -160,6 +161,15 @@ class TasksListPageState extends State<TasksListPageWidget> {
             SizedBox(height: 16.0),
             ElevatedButton(
                 child: Text('Создать новую задачу'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor : Colors.white,
+                  shadowColor: Colors.cyan,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  minimumSize: Size(150, 50),
+                ),
                 onPressed: () {
                   Navigator.pushReplacement(
                       context,
