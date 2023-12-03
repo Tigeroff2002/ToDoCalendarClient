@@ -15,6 +15,8 @@ import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
+import 'package:intl/intl.dart';
+
 class EventsListPageWidget extends StatefulWidget {
   const EventsListPageWidget({super.key});
 
@@ -143,7 +145,6 @@ class EventsListPageState extends State<EventsListPageWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: new ThemeData(scaffoldBackgroundColor: Colors.cyanAccent),
       home: Scaffold(
         appBar: AppBar(
           title: Text('Календарь мероприятий'),
@@ -164,10 +165,81 @@ class EventsListPageState extends State<EventsListPageWidget> {
           initialSelectedDate: DateTime.now(),
           dataSource: MeetingDataSource(getAppointments(eventsList)),
           timeZone: 'Russian Standard Time',
+          onTap: calendarTapped,
         ),
       ),
     );
   }
+
+  void calendarTapped(CalendarTapDetails details) {
+    if (details.targetElement == CalendarElement.appointment ||
+        details.targetElement == CalendarElement.agenda) {
+      final Appointment appointmentDetails = details.appointments![0];
+      _subjectText = appointmentDetails.subject;
+      _dateText = DateFormat('MMMM dd, yyyy')
+          .format(appointmentDetails.startTime)
+          .toString();
+      _startTimeText =
+          DateFormat('hh:mm a').format(appointmentDetails.startTime.add(Duration(hours: 3))).toString();
+      _endTimeText =
+          DateFormat('hh:mm a').format(appointmentDetails.endTime.add(Duration(hours: 3))).toString();
+      if (appointmentDetails.isAllDay) {
+        _timeDetails = 'All day';
+      } else {
+        _timeDetails = '$_startTimeText - $_endTimeText';
+      }
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Container(child: new Text('$_subjectText')),
+              content: Container(
+                height: 80,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          '$_dateText',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(''),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(_timeDetails!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 18)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                new ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: new Text('ОК'))
+              ],
+            );
+          });
+    }
+  }
+
+  String _timeDetails = '';
+  String _dateText = '';
+  String _subjectText = '';
+  String _startTimeText = '';
+  String _endTimeText = '';
 }
 
 /* legacy code

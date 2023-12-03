@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:todo_calendar_client/EnumAliaser.dart';
 import 'package:todo_calendar_client/models/EventAppointment.dart';
@@ -185,8 +186,79 @@ class ParticipantCalendarPageState extends State<ParticipantCalendarPageWidget> 
           initialDisplayDate: DateTime.now(),
           initialSelectedDate: DateTime.now(),
           dataSource: MeetingDataSource(getAppointments(eventsList)),
+          onTap: calendarTapped,
         ),
       ),
     );
   }
+
+  void calendarTapped(CalendarTapDetails details) {
+    if (details.targetElement == CalendarElement.appointment ||
+        details.targetElement == CalendarElement.agenda) {
+      final Appointment appointmentDetails = details.appointments![0];
+      _subjectText = appointmentDetails.subject;
+      _dateText = DateFormat('MMMM dd, yyyy')
+          .format(appointmentDetails.startTime)
+          .toString();
+      _startTimeText =
+          DateFormat('hh:mm a').format(appointmentDetails.startTime.add(Duration(hours: 3))).toString();
+      _endTimeText =
+          DateFormat('hh:mm a').format(appointmentDetails.endTime.add(Duration(hours: 3))).toString();
+      if (appointmentDetails.isAllDay) {
+        _timeDetails = 'All day';
+      } else {
+        _timeDetails = '$_startTimeText - $_endTimeText';
+      }
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Container(child: new Text('$_subjectText')),
+              content: Container(
+                height: 80,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          '$_dateText',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(''),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(_timeDetails!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 18)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                new ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: new Text('ОК'))
+              ],
+            );
+          });
+    }
+  }
+
+  String _timeDetails = '';
+  String _dateText = '';
+  String _subjectText = '';
+  String _startTimeText = '';
+  String _endTimeText = '';
 }
