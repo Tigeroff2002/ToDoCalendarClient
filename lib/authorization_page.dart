@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_calendar_client/home_page.dart';
 import 'package:todo_calendar_client/login_page.dart';
 import 'package:todo_calendar_client/register_page.dart';
 
@@ -10,7 +11,16 @@ class AuthorizationPage extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
             title: Text('Календарь Tigeroff'),
-            centerTitle: true
+            centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomePage()),);
+            },
+          ),
         ),
         body: Center(
           child: Column(

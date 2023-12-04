@@ -360,7 +360,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                     controller: eventCaptionController,
                     decoration: InputDecoration(
                         labelText: 'Наименование мероприятия:',
-                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepPurple),
                         errorText: !isCaptionValidated
                             ? 'Название мероприятия не может быть пустым'
                             : null
@@ -374,7 +374,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                         labelText: 'Описание меропрития:',
                         labelStyle: TextStyle(
                             fontSize: 16.0,
-                            color: Colors.deepOrange
+                            color: Colors.deepPurple
                         ),
                         errorText: !isDescriptionValidated
                             ? 'Описание мероприятия не может быть пустым'
@@ -384,7 +384,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   SizedBox(height: 20.0),
                   Text(
                     'Время начала мероприятия',
-                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                    style: TextStyle(fontSize: 16, color: Colors.deepPurple),
                   ),
                   SizedBox(height: 12.0),
                   ElevatedButton(
@@ -422,7 +422,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   SizedBox(height: 24.0),
                   Text(
                     'Время окончания мероприятия',
-                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                    style: TextStyle(fontSize: 16, color: Colors.deepPurple),
                   ),
                   SizedBox(height: 12.0),
                   TextButton(
@@ -470,7 +470,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   SizedBox(height: 16.0),
                   Text(
                     'Тип мероприятия',
-                    style: TextStyle(fontSize: 20, color: Colors.deepOrange),
+                    style: TextStyle(fontSize: 20, color: Colors.deepPurple),
                   ),
                   SizedBox(height: 4.0),
                   DropdownButtonFormField(
@@ -488,7 +488,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
                   SizedBox(height: 20.0),
                   Text(
                     'Статус мероприятия',
-                    style: TextStyle(fontSize: 20, color: Colors.deepOrange),
+                    style: TextStyle(fontSize: 20, color: Colors.deepPurple),
                   ),
                   SizedBox(height: 4.0),
                   DropdownButtonFormField(

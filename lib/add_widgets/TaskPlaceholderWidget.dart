@@ -152,7 +152,7 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                     controller: taskCaptionController,
                     decoration: InputDecoration(
                         labelText: 'Наименование задачи: ',
-                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepPurple),
                         errorText: !isCaptionValidated
                             ? 'Название задачи не может быть пустым'
                             : null
@@ -164,7 +164,7 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                     maxLines: null,
                     decoration: InputDecoration(
                         labelText: 'Описание задачи: ',
-                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                        labelStyle: TextStyle(fontSize: 16, color: Colors.deepPurple),
                         errorText: !isDescriptionValidated
                             ? 'Описание мероприятия не может быть пустым'
                             : null
@@ -173,7 +173,7 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                   SizedBox(height: 16.0),
                   Text(
                     'Тип задачи',
-                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                    style: TextStyle(fontSize: 16, color: Colors.deepPurple),
                   ),
                   SizedBox(height: 8.0),
                   DropdownButton(
@@ -191,7 +191,7 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                   SizedBox(height: 12.0),
                   Text(
                     'Статус задачи',
-                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                    style: TextStyle(fontSize: 16, color: Colors.deepPurple),
                   ),
                   SizedBox(height: 8.0),
                   DropdownButton(

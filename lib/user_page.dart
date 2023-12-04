@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
         index: 3),
 
     ReportPlaceholderWidget(
-        color: Colors.deepOrangeAccent,
+        color: Colors.deepPurpleAccent,
         text: 'Страница создания нового отчета',
         index: 4)
   ];

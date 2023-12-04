@@ -240,7 +240,7 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
               SizedBox(height: 16.0),
               Text(
                 'Тип отчета',
-                style: TextStyle(fontSize: 20, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 20, color: Colors.deepPurple),
               ),
               SizedBox(height: 4.0),
               DropdownButton(
@@ -258,7 +258,7 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
               SizedBox(height: 16.0),
               Text(
                 'Время начала отчета',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 12.0),
               ElevatedButton(
@@ -296,7 +296,7 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
               SizedBox(height: 20.0),
               Text(
                 'Время окончания отчета',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 12.0),
               TextButton(

@@ -240,7 +240,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
                     labelText: 'Наименование задачи: ',
                     labelStyle: TextStyle(
                         fontSize: 16.0,
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isCaptionValidated
                         ? 'Название задачи не может быть пустым'
@@ -255,7 +255,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
                     labelText: 'Описание задачи: ',
                     labelStyle: TextStyle(
                         fontSize: 16.0,
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isDescriptionValidated
                         ? 'Описание мероприятия не может быть пустым'
@@ -265,7 +265,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
               SizedBox(height: 12.0),
               Text(
                 'Тип задачи',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 4.0),
               DropdownButton(
@@ -283,7 +283,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
               SizedBox(height: 12.0),
               Text(
                 'Статус задачи',
-                style: TextStyle(fontSize: 16, color : Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color : Colors.deepPurple),
               ),
               SizedBox(height: 4.0),
               DropdownButton(

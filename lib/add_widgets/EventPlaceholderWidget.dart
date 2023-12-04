@@ -282,7 +282,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                 decoration: InputDecoration(
                   labelText: 'Наименование мероприятия:',
                     labelStyle: TextStyle(
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isCaptionValidated
                         ? 'Название мероприятия не может быть пустым'
@@ -296,7 +296,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                 decoration: InputDecoration(
                   labelText: 'Описание меропрития:',
                     labelStyle: TextStyle(
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isDescriptionValidated
                         ? 'Описание мероприятия не может быть пустым'
@@ -306,7 +306,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               SizedBox(height: 20.0),
               Text(
                 'Время начала мероприятия',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 12.0),
               ElevatedButton(
@@ -344,7 +344,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               SizedBox(height: 24.0),
               Text(
                 'Время окончания мероприятия',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 12.0),
               TextButton(
@@ -392,13 +392,13 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               SizedBox(height: 24.0),
               Text(
                 'Тип мероприятия',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 4.0),
               DropdownButtonFormField(
                   value: selectedEventType,
                   decoration: InputDecoration(
-                    labelStyle: TextStyle(fontSize: 16, color: Colors.deepOrange)
+                    labelStyle: TextStyle(fontSize: 16, color: Colors.deepPurple)
                   ),
                   items: eventTypes.map((String type){
                     return DropdownMenuItem(
@@ -413,7 +413,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               SizedBox(height: 20.0),
               Text(
                 'Статус мероприятия',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 4.0),
               DropdownButtonFormField(

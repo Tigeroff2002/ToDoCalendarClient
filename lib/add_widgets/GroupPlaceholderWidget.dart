@@ -145,7 +145,7 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
                   labelText: 'Наименование группы:',
                     labelStyle: TextStyle(
                       fontSize: 16.0,
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isNameValidated
                         ? 'Название группы не может быть пустым'
@@ -155,7 +155,7 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
               SizedBox(height: 20.0),
               Text(
                 'Тип группы:',
-                style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple),
               ),
               SizedBox(height: 8.0),
               DropdownButton(

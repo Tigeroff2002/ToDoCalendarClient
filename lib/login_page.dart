@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_calendar_client/authorization_page.dart';
 import 'package:todo_calendar_client/models/requests/UserLoginModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithTokenAndName.dart';
@@ -107,6 +108,15 @@ class LoginPageState extends State<LoginPage> {
         appBar: AppBar(
           title: Text('Вход в ваш аккаунт'),
           centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AuthorizationPage()),);
+            },
+          ),
         ),
         body: Padding(
           padding: EdgeInsets.all(16.0),
@@ -118,7 +128,7 @@ class LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                     labelText: 'Электронная почта: ',
                     labelStyle: TextStyle(
-                      color: Colors.deepOrange
+                      color: Colors.deepPurple
                     ),
                     errorText: !isEmailValidated
                         ? 'Почта не может быть пустой'
@@ -132,7 +142,7 @@ class LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                     labelText: 'Пароль: ',
                     labelStyle: TextStyle(
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isPasswordValidated
                         ? 'Пароль не может быть пустым'

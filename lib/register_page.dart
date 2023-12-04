@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:html';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:todo_calendar_client/authorization_page.dart';
 import 'package:todo_calendar_client/models/requests/UserRegisterModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
 import 'dart:convert';
@@ -130,6 +130,15 @@ class RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
           title: Text('Регистрация нового аккаунта'),
           centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AuthorizationPage()),);
+            },
+          ),
         ),
         body: Padding(
           padding: EdgeInsets.all(16.0),
@@ -141,7 +150,7 @@ class RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                     labelText: 'Электронная почта: ',
                     labelStyle: TextStyle(
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isEmailValidated
                         ? 'Почта не может быть пустой'
@@ -154,7 +163,7 @@ class RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                     labelText: 'Имя пользователя: ',
                     labelStyle: TextStyle(
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isNameValidated
                         ? 'Имя не может быть пустым'
@@ -167,7 +176,7 @@ class RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                     labelText: 'Пароль: ',
                     labelStyle: TextStyle(
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isPasswordValidated
                         ? 'Пароль не может быть пустым'
@@ -180,7 +189,7 @@ class RegisterPageState extends State<RegisterPage> {
                 decoration: InputDecoration(
                     labelText: 'Номер телефона: ',
                     labelStyle: TextStyle(
-                        color: Colors.deepOrange
+                        color: Colors.deepPurple
                     ),
                     errorText: !isPhoneValidated
                         ? 'Номер телефона не может быть пустым'
