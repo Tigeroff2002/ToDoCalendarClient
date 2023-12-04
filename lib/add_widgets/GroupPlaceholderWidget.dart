@@ -66,7 +66,7 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://127.0.0.1:5201/groups/create');
+      final url = Uri.parse('http://10.0.2.2:5201/groups/create');
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
 
@@ -92,7 +92,21 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
       catch (e) {
         if (e is SocketException) {
           //treat SocketException
-          print("Socket exception: ${e.toString()}");
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Ошибка!'),
+              content: Text('Проблема с соединением к серверу!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
         else if (e is TimeoutException) {
           //treat TimeoutException

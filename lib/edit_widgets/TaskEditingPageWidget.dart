@@ -54,7 +54,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://127.0.0.1:5201/tasks/get_task_info');
+      final url = Uri.parse('http://10.0.2.2:5201/tasks/get_task_info');
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
 
@@ -80,7 +80,21 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
       catch (e) {
         if (e is SocketException) {
           //treat SocketException
-          print("Socket exception: ${e.toString()}");
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Ошибка!'),
+              content: Text('Проблема с соединением к серверу!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
         else if (e is TimeoutException) {
           //treat TimeoutException
@@ -142,7 +156,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://127.0.0.1:5201/tasks/update_task_params');
+      final url = Uri.parse('http://10.0.2.2:5201/tasks/update_task_params');
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
 
@@ -169,7 +183,21 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
       catch (e) {
         if (e is SocketException) {
           //treat SocketException
-          print("Socket exception: ${e.toString()}");
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Ошибка!'),
+              content: Text('Проблема с соединением к серверу!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
         else if (e is TimeoutException) {
           //treat TimeoutException

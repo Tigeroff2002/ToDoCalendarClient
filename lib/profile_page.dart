@@ -20,7 +20,7 @@ class AdditionalPageWidget extends StatefulWidget {
   _AdditionalPageState createState() => _AdditionalPageState();
 }
 
-final uri = 'http://127.0.0.1:5201/users/get_info';
+final uri = 'http://10.0.2.2:5201/users/get_info';
 final headers = {'Content-Type': 'application/json'};
 
 class _AdditionalPageState extends State<AdditionalPageWidget> {
@@ -83,7 +83,21 @@ class _AdditionalPageState extends State<AdditionalPageWidget> {
       catch (e) {
         if (e is SocketException) {
           //treat SocketException
-          print("Socket exception: ${e.toString()}");
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Ошибка!'),
+              content: Text('Проблема с соединением к серверу!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
         else if (e is TimeoutException) {
           //treat TimeoutException

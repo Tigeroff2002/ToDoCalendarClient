@@ -52,8 +52,8 @@ class ParticipantCalendarPageState extends State<ParticipantCalendarPageWidget> 
         required this.participantId
       });
 
-  final uri = 'http://127.0.0.1:5201/groups/get_participant_calendar';
-  final eventInfoUri = 'http://127.0.0.1:5201/events/get_event_info';
+  final uri = 'http://10.0.2.2:5201/groups/get_participant_calendar';
+  final eventInfoUri = 'http://10.0.2.2:5201/events/get_event_info';
 
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
@@ -111,7 +111,21 @@ class ParticipantCalendarPageState extends State<ParticipantCalendarPageWidget> 
       catch (e) {
         if (e is SocketException) {
           //treat SocketException
-          print("Socket exception: ${e.toString()}");
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Ошибка!'),
+              content: Text('Проблема с соединением к серверу!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
         else if (e is TimeoutException) {
           //treat TimeoutException
@@ -221,7 +235,21 @@ class ParticipantCalendarPageState extends State<ParticipantCalendarPageWidget> 
       catch (e) {
         if (e is SocketException) {
           //treat SocketException
-          print("Socket exception: ${e.toString()}");
+          showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Ошибка!'),
+              content: Text('Проблема с соединением к серверу!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
         }
         else if (e is TimeoutException) {
           //treat TimeoutException
