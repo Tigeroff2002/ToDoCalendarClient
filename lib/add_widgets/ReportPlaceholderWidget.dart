@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:todo_calendar_client/models/requests/AddNewReportModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
+import '../GlobalEndpoints.dart';
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 import '../shared_pref_cached_data.dart';
 
@@ -78,7 +79,18 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://10.0.2.2:5201/reports/perform_new');
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/reports/perform_new';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
 

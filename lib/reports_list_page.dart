@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:todo_calendar_client/models/responses/additional_responces/GetResponse.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
+import 'GlobalEndpoints.dart';
 import 'add_widgets/ReportPlaceholderWidget.dart';
 import 'models/responses/ReportInfoResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
@@ -28,7 +29,6 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
     getUserInfo();
   }
 
-  final uri = 'http://10.0.2.2:5201/users/get_info';
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
 
@@ -60,7 +60,18 @@ class ReportsListPageState extends State<ReportsListPageWidget> {
       var model = new UserInfoRequestModel(userId: userId, token: token);
       var requestMap = model.toJson();
 
-      var url = Uri.parse(uri);
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/users/get_info';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final body = jsonEncode(requestMap);
 
       try {

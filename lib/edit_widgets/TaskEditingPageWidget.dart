@@ -9,6 +9,7 @@ import 'package:todo_calendar_client/models/requests/EditExistingTaskModel.dart'
 import 'package:todo_calendar_client/models/requests/TaskInfoRequest.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
 import 'package:todo_calendar_client/tasks_list_page.dart';
+import '../GlobalEndpoints.dart';
 import '../models/responses/additional_responces/GetResponse.dart';
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 import '../shared_pref_cached_data.dart';
@@ -54,7 +55,18 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://10.0.2.2:5201/tasks/get_task_info');
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/tasks/get_task_info';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
 
@@ -156,7 +168,18 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://10.0.2.2:5201/tasks/update_task_params');
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/tasks/update_task_params';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
 

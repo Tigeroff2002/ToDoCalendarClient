@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:todo_calendar_client/user_page.dart';
 
+import 'GlobalEndpoints.dart';
 import 'models/requests/UserInfoRequestModel.dart';
 import 'models/responses/additional_responces/GetResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
@@ -20,7 +21,6 @@ class AdditionalPageWidget extends StatefulWidget {
   _AdditionalPageState createState() => _AdditionalPageState();
 }
 
-final uri = 'http://10.0.2.2:5201/users/get_info';
 final headers = {'Content-Type': 'application/json'};
 
 class _AdditionalPageState extends State<AdditionalPageWidget> {
@@ -57,7 +57,18 @@ class _AdditionalPageState extends State<AdditionalPageWidget> {
       var model = new UserInfoRequestModel(userId: userId, token: token);
       var requestMap = model.toJson();
 
-      var url = Uri.parse(uri);
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/users/get_info';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final body = jsonEncode(requestMap);
 
       try {

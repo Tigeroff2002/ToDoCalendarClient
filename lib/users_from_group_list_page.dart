@@ -14,6 +14,7 @@ import 'package:todo_calendar_client/models/responses/additional_responces/Group
 import 'package:todo_calendar_client/participant_calendar_page.dart';
 import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
+import 'GlobalEndpoints.dart';
 import 'models/responses/additional_responces/GroupGetResponse.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
@@ -41,7 +42,6 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
 
   UsersFromGroupListPageState({required this.groupId});
 
-  final uri = 'http://10.0.2.2:5201/groups/get_group_info';
   final headers = {'Content-Type': 'application/json'};
   bool isColor = false;
 
@@ -65,7 +65,18 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
       var model = new GroupInfoRequest(userId: userId, token: token, groupId: groupId);
       var requestMap = model.toJson();
 
-      var url = Uri.parse(uri);
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/groups/get_group_info';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final body = jsonEncode(requestMap);
 
       try {
@@ -167,7 +178,18 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
       var model = new GroupInfoRequest(userId: userId, token: token, groupId: groupId);
       var requestMap = model.toJson();
 
-      var url = Uri.parse(uri);
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/groups/get_group_info';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final body = jsonEncode(requestMap);
 
       try {

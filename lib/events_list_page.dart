@@ -35,8 +35,8 @@ class EventsListPageState extends State<EventsListPageWidget> {
     getUserInfo();
   }
 
-  final userInfoUri = 'http://10.0.2.2:5201/users/get_info';
-  final eventInfoUri = 'http://10.0.2.2:5201/events/get_event_info';
+  final userInfoUri = 'http://127.0.0.1:5201/users/get_info';
+  final eventInfoUri = 'http://127.0.0.1:5201/events/get_event_info';
 
   final headers = {'Content-Type': 'application/json'};
 
@@ -367,7 +367,7 @@ class EventsListPageState extends State<EventsListPageWidget> {
                 return AlertDialog(
                   title: Container(child: new Text('$_subjectText')),
                   content: Container(
-                      height: 200,
+                      height: 300,
                       width: 500,
                       child: Padding(
                           padding: EdgeInsets.all(6.0),

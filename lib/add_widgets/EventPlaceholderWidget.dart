@@ -6,6 +6,7 @@ import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/models/requests/AddNewEventModel.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/Response.dart';
+import '../GlobalEndpoints.dart';
 import '../models/responses/additional_responces/ResponseWithToken.dart';
 
 class EventPlaceholderWidget extends StatefulWidget{
@@ -113,7 +114,18 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
 
       var requestMap = model.toJson();
 
-      final url = Uri.parse('http://10.0.2.2:5201/events/schedule_new');
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/events/schedule_new';
+
+      var currentPort = uris.currentPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
       final headers = {'Content-Type': 'application/json'};
       final body = jsonEncode(requestMap);
 
