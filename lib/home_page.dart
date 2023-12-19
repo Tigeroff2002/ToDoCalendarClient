@@ -21,6 +21,7 @@ class HomePage extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
             title: Text('Календарь Tigeroff'),
+            backgroundColor: Colors.cyan,
             centerTitle: true
         ),
         body: Center(

@@ -436,6 +436,18 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                       selectedEventType = newType.toString();
                     });
                   }),
+              SizedBox(height: 6.0),
+              selectedEventType == 'Personal'
+                  ? Text(
+                'Мероприятие рассчитано только для вас',
+                style: TextStyle(fontSize: 16, color: Colors.deepPurple))
+                  : selectedEventType == 'Meeting' || selectedEventType == 'StandUp'
+                      ? Text(
+                        'Мероприятие рассчитано только для всех участников группы',
+                         style: TextStyle(fontSize: 16, color: Colors.deepPurple))
+                       : Text(
+                  'Доступен выбор участников группы',
+                  style: TextStyle(fontSize: 16, color: Colors.deepPurple)),
               SizedBox(height: 20.0),
               Text(
                 'Статус мероприятия',
