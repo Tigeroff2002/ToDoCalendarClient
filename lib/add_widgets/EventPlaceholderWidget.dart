@@ -42,6 +42,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
 
   bool isEventEndTimeGreaterThanBeginTime = true;
   bool isEventDurationValidated = true;
+  bool isEventStartsLaterThanNow = true;
 
   final TextEditingController eventCaptionController = TextEditingController();
   final TextEditingController eventDescriptionController = TextEditingController();
@@ -364,6 +365,9 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                     isEventDurationValidated =
                         (selectedEndDateTime.difference(selectedBeginDateTime)
                             .inMilliseconds) < (3600 * 24 * 1000);
+
+                    isEventStartsLaterThanNow = selectedBeginDateTime
+                        .difference(DateTime.now()).inMinutes > 0;
                   });
                 },
               ),
@@ -376,7 +380,9 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               TextButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                    isEventDurationValidated && isEventEndTimeGreaterThanBeginTime
+                    isEventDurationValidated
+                        && isEventEndTimeGreaterThanBeginTime
+                        && isEventStartsLaterThanNow
                       ? Colors.green
                       : Colors.red,
                   foregroundColor : Colors.white,
@@ -387,13 +393,18 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                   minimumSize: Size(250, 100),
                 ),
                 child:
-                  isEventDurationValidated && isEventEndTimeGreaterThanBeginTime
+                  isEventDurationValidated
+                      && isEventEndTimeGreaterThanBeginTime
+                      && isEventStartsLaterThanNow
                     ? Text(outputEndDateTime)
-                    : !isEventEndTimeGreaterThanBeginTime
-                      ? Text('Время окончания ' + outputEndDateTime
-                        + ' должно быть больше времени начала')
-                      : Text('Время окончания ' + outputEndDateTime
-                         + ' должно быть не позже 24 часов после начала'),
+                    : !isEventStartsLaterThanNow
+                      ? Text('Время начала ' + outputBeginDateTime
+                        + ' должно быть больше текущего времени')
+                      : !isEventEndTimeGreaterThanBeginTime
+                        ? Text('Время окончания ' + outputEndDateTime
+                          + ' должно быть больше времени начала')
+                        : Text('Время окончания ' + outputEndDateTime
+                          + ' должно быть не позже 24 часов после начала'),
                 onPressed: () async {
                   await pickEndDateTime();
                   setState(() {
@@ -412,6 +423,9 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                     isEventDurationValidated =
                         (selectedEndDateTime.difference(selectedBeginDateTime)
                             .inMilliseconds) < (3600 * 24 * 1000);
+
+                    isEventStartsLaterThanNow = selectedBeginDateTime
+                        .difference(DateTime.now()).inMinutes > 0;
                   });
                 },
               ),
@@ -488,8 +502,13 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                     isEventDurationValidated =
                       (selectedEndDateTime.difference(selectedBeginDateTime).inMilliseconds) < (3600 * 24 * 1000);
 
+                    isEventStartsLaterThanNow = selectedBeginDateTime
+                        .difference(DateTime.now()).inMinutes > 0;
+
                     if (isCaptionValidated && isDescriptionValidated
-                        && isEventDurationValidated && isEventEndTimeGreaterThanBeginTime){
+                        && isEventDurationValidated
+                        && isEventEndTimeGreaterThanBeginTime
+                        && isEventStartsLaterThanNow) {
                       addNewEvent(context);
                     }
                   });
