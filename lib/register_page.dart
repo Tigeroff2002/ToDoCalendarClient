@@ -96,55 +96,51 @@ class RegisterPageState extends State<RegisterPage> {
         ),
       );
 
-      final response = await http.post(url ,headers: headers, body : body);
+      http.post(url ,headers: headers, body : body).then((response) async {
 
-      if (response.statusCode == 200)
-      {
-        var jsonData = jsonDecode(response.body);
+        if (response.statusCode == 200)
+        {
+          var jsonData = jsonDecode(response.body);
 
-        var responseContent = ResponseWithToken.fromJson(jsonData);
+          var responseContent = ResponseWithToken.fromJson(jsonData);
 
-        MySharedPreferences mySharedPreferences = new MySharedPreferences();
+          MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-        await mySharedPreferences.clearData();
+          await mySharedPreferences.clearData();
 
-        await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+          await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(responseContent.outInfo.toString()),
-          ),
-        );
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context)
-                => UserPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context)
+                  => UserPage()));
 
-        usernameController.clear();
-        emailController.clear();
-        passwordController.clear();
-        phoneNumberController.clear();
-      }
-      else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Ошибка!'),
-            content: Text('Регистрация не удалась!'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
+          usernameController.clear();
+          emailController.clear();
+          passwordController.clear();
+          phoneNumberController.clear();
+        }
+        else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Ошибка!'),
+              content: Text('Регистрация не удалась!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
 
-        passwordController.clear();
-      }
+          passwordController.clear();
+        }
+      });
     }
     catch (e) {
       if (e is SocketException) {
