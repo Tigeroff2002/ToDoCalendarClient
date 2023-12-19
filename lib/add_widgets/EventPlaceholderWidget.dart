@@ -123,7 +123,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
 
       var requestString = '/events/schedule_new';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 

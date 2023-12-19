@@ -63,7 +63,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
       var requestString = '/tasks/get_task_info';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 
@@ -176,7 +176,7 @@ class TaskEditingPageState extends State<TaskEditingPageWidget> {
 
       var requestString = '/tasks/update_task_params';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 

@@ -89,7 +89,7 @@ class ParticipantCalendarPageState extends State<ParticipantCalendarPageWidget> 
 
       var requestString = '/groups/get_participant_calendar';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 
@@ -192,7 +192,7 @@ class ParticipantCalendarPageState extends State<ParticipantCalendarPageWidget> 
 
       var requestString = '/events/get_event_info';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 

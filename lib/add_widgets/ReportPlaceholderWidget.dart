@@ -87,7 +87,7 @@ class ReportPlaceholderState extends State<ReportPlaceholderWidget> {
 
       var requestString = '/reports/perform_new';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 

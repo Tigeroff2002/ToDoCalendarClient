@@ -85,7 +85,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
 
       var requestString = '/events/get_event_info';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 
@@ -210,7 +210,7 @@ class EventEditingPageState extends State<EventEditingPageWidget> {
 
       var requestString = '/events/update_event_params';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 

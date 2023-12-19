@@ -63,7 +63,7 @@ class RegisterPageState extends State<RegisterPage> {
 
     var requestString = '/users/register';
 
-    var currentPort = uris.currentPort;
+    var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
     final url = Uri.parse(currentUri + currentPort + requestString);
 
@@ -71,6 +71,31 @@ class RegisterPageState extends State<RegisterPage> {
     final body = jsonEncode(requestMap);
 
     try {
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Необходимо подтвердить ваш аккаунт'),
+          content: Text('Перейдите на указанный вами адрес электронной почты'
+              ' "' + email + '" для его подтверждения'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: Text(
+                        'Ожидание подтверждения вашей электронной почты'
+                            ' в течение 5 минут'),
+                  ),
+                );
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+
       final response = await http.post(url ,headers: headers, body : body);
 
       if (response.statusCode == 200)

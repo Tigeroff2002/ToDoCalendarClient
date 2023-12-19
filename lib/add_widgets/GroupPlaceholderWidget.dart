@@ -75,7 +75,7 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
 
       var requestString = '/groups/create';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 

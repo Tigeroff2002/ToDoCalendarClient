@@ -82,7 +82,7 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
 
       var requestString = '/tasks/create';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 

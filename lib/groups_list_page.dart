@@ -67,7 +67,7 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
 
       var requestString = '/users/get_info';
 
-      var currentPort = uris.currentPort;
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
 
       final url = Uri.parse(currentUri + currentPort + requestString);
 
