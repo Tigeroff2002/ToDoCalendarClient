@@ -34,7 +34,7 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
   bool isBeginTimeChanged = false;
   bool isEndTimeChanged = false;
 
-  final int groupId = 9;
+  final int groupId = 17;
 
   late String token;
 
