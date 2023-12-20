@@ -200,10 +200,10 @@ class GroupPlaceholderState extends State<GroupPlaceholderWidget> {
               selectedGroupType == 'None'
                 ? Text(
                    'Данная группа будет открытой, доступной для всех пользователей',
-                    style: TextStyle(fontSize: 16, color: Colors.deepPurple))
+                    style: TextStyle(fontSize: 16, color: Colors.deepOrange))
                 : Text(
                    'Доступно ограничение видимости группы для пользователей',
-                   style: TextStyle(fontSize: 16, color: Colors.deepPurple)),
+                   style: TextStyle(fontSize: 16, color: Colors.deepOrange)),
               SizedBox(height: 30.0),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(

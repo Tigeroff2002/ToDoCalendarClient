@@ -294,7 +294,7 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
                         ),
                       ),
                       Text(
-                        utf8.decode(data.userEmail.codeUnits),
+                        utf8.decode(utf8.encode(data.userEmail)),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

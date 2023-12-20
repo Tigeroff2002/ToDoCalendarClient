@@ -221,7 +221,7 @@ class GroupsListPageState extends State<GroupsListPageWidget> {
                         ),
                       ),
                       Text(
-                        utf8.decode(data.groupName.codeUnits),
+                        utf8.decode(utf8.encode(data.groupName)),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

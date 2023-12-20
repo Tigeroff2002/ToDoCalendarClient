@@ -230,7 +230,7 @@ class TasksListPageState extends State<TasksListPageWidget> {
                         ),
                       ),
                       Text(
-                        utf8.decode(data.caption.codeUnits),
+                        utf8.decode(utf8.encode(data.caption)),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -244,7 +244,7 @@ class TasksListPageState extends State<TasksListPageWidget> {
                         ),
                       ),
                       Text(
-                        utf8.decode(data.description.codeUnits),
+                        utf8.decode(utf8.encode(data.description)),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

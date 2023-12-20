@@ -454,14 +454,14 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
               selectedEventType == 'Personal'
                   ? Text(
                 'Мероприятие рассчитано только для вас',
-                style: TextStyle(fontSize: 16, color: Colors.deepPurple))
+                style: TextStyle(fontSize: 16, color: Colors.deepOrange))
                   : selectedEventType == 'Meeting' || selectedEventType == 'StandUp'
                       ? Text(
                         'Мероприятие рассчитано только для всех участников группы',
-                         style: TextStyle(fontSize: 16, color: Colors.deepPurple))
+                         style: TextStyle(fontSize: 16, color: Colors.deepOrange))
                        : Text(
                   'Доступен выбор участников группы',
-                  style: TextStyle(fontSize: 16, color: Colors.deepPurple)),
+                  style: TextStyle(fontSize: 16, color: Colors.deepOrange)),
               SizedBox(height: 20.0),
               Text(
                 'Статус мероприятия',
