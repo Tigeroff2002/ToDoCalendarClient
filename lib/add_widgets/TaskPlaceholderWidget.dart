@@ -233,10 +233,10 @@ class TaskPlaceholderState extends State<TaskPlaceholderWidget> {
                         });
                       }),
                   SizedBox(height: 6.0),
-                Text(
-                  'Задача по умолчанию назначается на вас',
-                  style: TextStyle(fontSize: 16, color: Colors.deepOrange),
-                ),
+                  Text(
+                    'Задача по умолчанию назначается на вас',
+                    style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                  ),
                   SizedBox(height: 30.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

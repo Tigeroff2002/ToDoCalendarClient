@@ -303,15 +303,7 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
             );
           }
         }
-
-          setState(() {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context)
-              => UsersFromGroupListPageWidget(groupId: groupId)),
-            );
-          });
-        }
+      }
       catch (e) {
         if (e is SocketException) {
           //treat SocketException
@@ -435,7 +427,10 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
                             : Text('Выйти из группы'),
                           onPressed: () {
                           setState(() {
-                            deleteUserFromGroup(data.userId);
+                            deleteUserFromGroup(data.userId).then((value) =>
+                            {
+                                usersList.removeWhere((element) => element.userId == data.userId)
+                            });
                           });
                         },
                       ),

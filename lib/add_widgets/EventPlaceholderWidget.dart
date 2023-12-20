@@ -34,7 +34,8 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
   bool isBeginTimeChanged = false;
   bool isEndTimeChanged = false;
 
-  final int groupId = 10;
+  final int groupId = 9;
+
   late String token;
 
   bool isCaptionValidated = true;
@@ -450,6 +451,11 @@ class EventPlaceholderState extends State<EventPlaceholderWidget> {
                       selectedEventType = newType.toString();
                     });
                   }),
+                SizedBox(height: 6.0),
+                Text(
+                  'Мероприятие относится к вашей основной группе',
+                  style: TextStyle(fontSize: 16, color: Colors.deepOrange),
+                ),
               SizedBox(height: 6.0),
               selectedEventType == 'Personal'
                   ? Text(
