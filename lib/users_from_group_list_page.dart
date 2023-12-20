@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_calendar_client/EnumAliaser.dart';
 import 'package:todo_calendar_client/events_list_page.dart';
+import 'package:todo_calendar_client/models/requests/GroupDeleteParticipantRequest.dart';
 import 'package:todo_calendar_client/models/requests/GroupInfoRequest.dart';
 import 'package:todo_calendar_client/models/requests/UserInfoRequestModel.dart';
 import 'dart:convert';
@@ -16,6 +17,7 @@ import 'package:todo_calendar_client/shared_pref_cached_data.dart';
 import 'package:todo_calendar_client/user_page.dart';
 import 'GlobalEndpoints.dart';
 import 'models/responses/additional_responces/GroupGetResponse.dart';
+import 'models/responses/additional_responces/Response.dart';
 import 'models/responses/additional_responces/ResponseWithToken.dart';
 
 class UsersFromGroupListPageWidget extends StatefulWidget {
@@ -251,6 +253,102 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
     }
   }
 
+  Future<void> deleteUserFromGroup(int deletionUserId) async {
+
+    MySharedPreferences mySharedPreferences = new MySharedPreferences();
+
+    var cachedData = await mySharedPreferences.getDataIfNotExpired();
+
+    if (cachedData != null){
+      var json = jsonDecode(cachedData.toString());
+      var cacheContent = ResponseWithToken.fromJson(json);
+
+      var userId = cacheContent.userId;
+      var token = cacheContent.token.toString();
+
+      var model = new GroupDeleteParticipantRequest(
+          userId: userId,
+          token: token,
+          groupId: groupId,
+          participantId: deletionUserId);
+      var requestMap = model.toJson();
+
+      var uris = GlobalEndpoints();
+
+      bool isMobile = Theme.of(context).platform == TargetPlatform.android;
+
+      var currentUri = isMobile ? uris.mobileUri : uris.webUri;
+
+      var requestString = '/groups/delete_participant';
+
+      var currentPort = isMobile ? uris.currentMobilePort : uris.currentWebPort;
+
+      final url = Uri.parse(currentUri + currentPort + requestString);
+
+      final body = jsonEncode(requestMap);
+
+      try {
+        final response = await http.post(url, headers: headers, body: body);
+
+        if (response.statusCode == 200) {
+
+          var jsonData = jsonDecode(response.body);
+          var responseContent = Response.fromJson(jsonData);
+
+          if (responseContent.outInfo != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(responseContent.outInfo.toString())
+                )
+            );
+          }
+        }
+
+          setState(() {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context)
+              => UsersFromGroupListPageWidget(groupId: groupId)),
+            );
+          });
+        }
+      catch (e) {
+        if (e is SocketException) {
+          //treat SocketException
+          print("Socket exception: ${e.toString()}");
+        }
+        else if (e is TimeoutException) {
+          //treat TimeoutException
+          print("Timeout exception: ${e.toString()}");
+        }
+        else
+          print("Unhandled exception: ${e.toString()}");
+      }
+    }
+    else {
+      setState(() {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Ошибка!'),
+            content:
+            Text(
+                'Произошла ошибка при получении'
+                    ' полной информации о пользователе!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     return MaterialApp(
@@ -330,6 +428,18 @@ class UsersFromGroupListPageState extends State<UsersFromGroupListPageWidget> {
                           );
                         },
                       ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        child: userId != data.userId
+                            ? Text('Исключить пользователя')
+                            : Text('Выйти из группы'),
+                          onPressed: () {
+                          setState(() {
+                            deleteUserFromGroup(data.userId);
+                          });
+                        },
+                      ),
+                      SizedBox(height: 10)
                     ],
                   ),
                 ),
