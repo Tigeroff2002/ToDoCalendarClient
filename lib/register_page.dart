@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:todo_calendar_client/authorization_page.dart';
 import 'package:todo_calendar_client/models/requests/UserRegisterModel.dart';
+import 'package:todo_calendar_client/models/responses/additional_responces/RegistrationResponse.dart';
 import 'package:todo_calendar_client/models/responses/additional_responces/ResponseWithToken.dart';
 import 'dart:convert';
 import 'package:todo_calendar_client/user_page.dart';
@@ -71,74 +72,84 @@ class RegisterPageState extends State<RegisterPage> {
     final body = jsonEncode(requestMap);
 
     try {
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Необходимо подтвердить ваш аккаунт'),
-          content: Text('Перейдите на указанный вами адрес электронной почты'
-              ' "' + email + '" для его подтверждения'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    content: Text(
-                        'Ожидание подтверждения вашей электронной почты'
-                            ' в течение 5 минут'),
-                  ),
-                );
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-
       http.post(url ,headers: headers, body : body).then((response) async {
 
         if (response.statusCode == 200)
         {
           var jsonData = jsonDecode(response.body);
 
-          var responseContent = ResponseWithToken.fromJson(jsonData);
+          var responseContent = RegistrationResponse.fromJson(jsonData);
 
-          MySharedPreferences mySharedPreferences = new MySharedPreferences();
+          var registerCase = responseContent.registrationCase;
 
-          await mySharedPreferences.clearData();
+          if (registerCase == 'SuchUserExisted'){
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Ошибка!'),
+                content: Text(
+                    'Регистрация не удалась!'
+                        ' Пользователь с указанной почтой был уже зарегистрирован'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            );
 
-          await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+            usernameController.clear();
+            emailController.clear();
+            passwordController.clear();
+            phoneNumberController.clear();
+          }
+          else {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Необходимо подтвердить ваш аккаунт'),
+                content: Text('Перейдите на указанный вами адрес электронной почты'
+                    ' "' + email + '" для его подтверждения'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: Text(
+                              'Ожидание подтверждения вашей электронной почты'
+                                  ' в течение 5 минут'),
+                        ),
+                      );
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            );
 
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context)
-                  => UserPage()));
+            await Future.delayed(const Duration(milliseconds: 30000));
 
-          usernameController.clear();
-          emailController.clear();
-          passwordController.clear();
-          phoneNumberController.clear();
-        }
-        else {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Ошибка!'),
-              content: Text('Регистрация не удалась!'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
+            MySharedPreferences mySharedPreferences = new MySharedPreferences();
 
-          passwordController.clear();
+            await mySharedPreferences.clearData();
+
+            await mySharedPreferences.saveDataWithExpiration(response.body, const Duration(days: 7));
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context)
+                    => UserPage()));
+
+            usernameController.clear();
+            emailController.clear();
+            passwordController.clear();
+            phoneNumberController.clear();
+          }
         }
       });
     }

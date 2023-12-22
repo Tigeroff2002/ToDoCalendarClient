@@ -79,12 +79,30 @@ class LoginPageState extends State<LoginPage> {
         emailController.clear();
         passwordController.clear();
 
-      } else {
+      } else if (response.statusCode == 400){
         showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Ошибка!'),
-            content: Text('Неверная почта или пароль!'),
+            content: Text('Вы ввели неверную почту или пароль!'
+                ' Удостоверьтесь, что аккаунт существует'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      else{
+        showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Ошибка!'),
+            content: Text('Проблема с соединением к серверу!'),
             actions: [
               TextButton(
                 onPressed: () {
